@@ -38,7 +38,15 @@
   .btn.solid:hover{background:#c26905;color:#fff}
   .month-label{font-size:1.15rem;font-weight:700;min-width:11rem;text-align:center;letter-spacing:-.01em}
   .spacer{flex:1}
-  .toolbar .right{display:flex;gap:.5rem;flex-wrap:wrap}
+  .toolbar .right{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+
+  .syncpill{display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:var(--muted);
+    border:1px solid var(--line);border-radius:20px;padding:.32rem .62rem;font-weight:600;cursor:default}
+  .syncpill .d{width:8px;height:8px;border-radius:50%;background:#bbb;flex:0 0 auto}
+  .syncpill.ok .d{background:#16a34a}
+  .syncpill.off .d{background:#ea580c}
+  .syncpill.sync .d{background:var(--accent);animation:blip 1s ease-in-out infinite}
+  @keyframes blip{50%{opacity:.25}}
 
   /* legend */
   .legend{display:flex;flex-wrap:wrap;gap:.5rem .9rem;margin:0 0 .9rem}
@@ -167,6 +175,22 @@
     opacity:0;transition:.25s;z-index:90;pointer-events:none}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   input[type=file]{display:none}
+
+  /* ---- password gate ---- */
+  .gate{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:1.5rem}
+  .gate.hide{display:none}
+  .gate .card{max-width:340px;width:100%;text-align:center}
+  .gate .lock{font-size:2.2rem}
+  .gate h2{font-size:1.5rem;font-weight:700;margin:.4rem 0 .25rem;letter-spacing:-.01em}
+  .gate p{color:var(--muted);font-size:.9rem;margin-bottom:1.3rem}
+  .gate input{width:100%;padding:.75rem .9rem;border:1px solid var(--line);border-radius:12px;
+    font-size:1.05rem;text-align:center;letter-spacing:.12em;background:#fff;color:var(--ink)}
+  .gate input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(217,119,6,.12)}
+  .gate button{margin-top:.7rem;width:100%;padding:.75rem;border:none;border-radius:12px;
+    background:var(--accent);color:#fff;font-weight:600;font-size:.95rem;cursor:pointer;transition:.15s}
+  .gate button:hover{background:#c26905}
+  .gate button:disabled{opacity:.6;cursor:default}
+  .gate .err{color:#dc2626;font-size:.82rem;margin-top:.7rem;min-height:1.1rem}
 </style>
 </head>
 <body>
@@ -185,8 +209,10 @@
     <button class="btn" id="today">Today</button>
     <div class="spacer"></div>
     <div class="right">
+      <span class="syncpill" id="syncPill" title="Sync status"><span class="d"></span><span id="syncText">local</span></span>
       <button class="btn" id="exportBtn" title="Download a backup of all events">⬇ Export</button>
       <button class="btn" id="importBtn" title="Load events from a backup file">⬆ Import</button>
+      <button class="btn icon" id="lockBtn" title="Lock / sign out">🔒</button>
       <input type="file" id="importFile" accept="application/json">
     </div>
   </div>
@@ -207,7 +233,7 @@
 
   <footer>
     Click a day to add an event · set a “to” date for multi-day events · click a ✓ box to mark done.<br>
-    Saved automatically in this browser — use <b>Export</b> to back up or move devices.
+    Shared with family &amp; synced across devices · changes save automatically.
   </footer>
 </div>
 
@@ -250,10 +276,25 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- password gate -->
+<div class="gate" id="gate">
+  <div class="card">
+    <div class="lock">🔒</div>
+    <h2>Trip Planner</h2>
+    <p>Enter the family password to view and edit the trip.</p>
+    <input type="password" id="gatePass" placeholder="Password" autocomplete="current-password" autofocus>
+    <button id="gateBtn">Unlock</button>
+    <div class="err" id="gateErr"></div>
+  </div>
+</div>
+
 <script>
 (function(){
   "use strict";
   var STORE_KEY = 'activity-planner-v1';
+  var PASS_KEY  = 'trip-pass';
+  var SYNC_URL  = localStorage.getItem('trip-sync-url') || 'https://spark-5d2c.tail824731.ts.net/api/trip';
+
   var CATS = [
     {id:'work',     label:'Work',     c:'#2563eb'},
     {id:'personal', label:'Personal', c:'#16a34a'},
@@ -272,47 +313,136 @@
   var store = load();
   var now = new Date();
   var viewY = now.getFullYear(), viewM = now.getMonth();
-  var openKey = null;      // date key currently open in modal
-  var editingId = null;    // event id being edited (null = adding)
+  var openKey = null, editingId = null;
+  var pass = localStorage.getItem(PASS_KEY) || null;
+  var lastRev = -1, pollTimer = null, pushTimer = null, pushing = false;
 
   function load(){
     try{ var raw = localStorage.getItem(STORE_KEY);
       if(raw){ var o = JSON.parse(raw);
         if(o && o.version===2 && Array.isArray(o.events)) return o;
-        if(o && o.activities){ // migrate v1 (single-day) -> v2 events
-          var evs=[]; Object.keys(o.activities).forEach(function(k){
-            (o.activities[k]||[]).forEach(function(e){
-              evs.push({id:e.id||uid(),title:e.title,cat:e.cat||'other',start:k,end:k,time:e.time||'',note:e.note||'',done:!!e.done});
-            });
-          });
+        if(o && o.activities){ var evs=[]; Object.keys(o.activities).forEach(function(k){
+            (o.activities[k]||[]).forEach(function(e){ evs.push({id:e.id||uid(),title:e.title,cat:e.cat||'other',start:k,end:k,time:e.time||'',note:e.note||'',done:!!e.done,updatedAt:1}); }); });
           return {version:2, events:evs};
         }
       }
     }catch(e){}
     return {version:2, events:[]};
   }
-  function save(){
-    try{ localStorage.setItem(STORE_KEY, JSON.stringify(store)); }
-    catch(e){ toast('Could not save (storage full or blocked)'); }
-  }
+  function saveLocal(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(store)); }catch(e){ toast('Could not save locally'); } }
   function uid(){ return 'a'+Date.now().toString(36)+Math.floor(Math.random()*1e5).toString(36); }
+  function nowMs(){ return Date.now(); }
   function pad2(n){ return (n<10?'0':'')+n; }
   function keyOf(d){ return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate()); }
   function parseKey(k){ var p=k.split('-'); return new Date(+p[0],+p[1]-1,+p[2]); }
   function dayDiff(a,b){ return Math.round((new Date(b.getFullYear(),b.getMonth(),b.getDate()) - new Date(a.getFullYear(),a.getMonth(),a.getDate()))/86400000); }
   function todayKey(){ return keyOf(new Date()); }
   function evEnd(e){ return (e.end && e.end>=e.start) ? e.end : e.start; }
-  // events overlapping [aKey,bKey] inclusive (ISO strings compare lexically)
-  function eventsBetween(aKey,bKey){ return store.events.filter(function(e){ return e.start<=bKey && evEnd(e)>=aKey; }); }
+  function live(){ return store.events.filter(function(e){ return !e.deleted; }); }
+  function eventsBetween(a,b){ return store.events.filter(function(e){ return !e.deleted && e.start<=b && evEnd(e)>=a; }); }
   function eventsOnDay(k){ return eventsBetween(k,k); }
 
-  // ---------- legend + weekday header + category select ----------
-  var legend = document.getElementById('legend');
-  CATS.forEach(function(c){
-    var s=document.createElement('span');
-    s.innerHTML='<span class="swatch" style="background:'+c.c+'"></span>'+c.label;
-    legend.appendChild(s);
+  // ---------- merge (by id, newest updatedAt wins; tombstones included) ----------
+  function mergeInto(remoteEvents){
+    var map={};
+    store.events.forEach(function(e){ map[e.id]=e; });
+    remoteEvents.forEach(function(e){
+      if(!e||!e.id) return;
+      var cur=map[e.id];
+      if(!cur || (cur.updatedAt||0) <= (e.updatedAt||0)) map[e.id]=e;
+    });
+    store.events = Object.keys(map).map(function(k){ return map[k]; });
+  }
+
+  // ---------- sync ----------
+  var syncPill=document.getElementById('syncPill'), syncText=document.getElementById('syncText');
+  function setSync(state){ // 'ok' | 'off' | 'sync' | 'local'
+    syncPill.className='syncpill'+(state==='ok'?' ok':state==='off'?' off':state==='sync'?' sync':'');
+    syncText.textContent = state==='ok'?'synced':state==='off'?'offline':state==='sync'?'syncing…':'local';
+  }
+  function apiGET(){
+    return fetch(SYNC_URL,{headers:{'Authorization':'Bearer '+pass}}).then(function(r){
+      if(r.status===401){ var e=new Error('unauthorized'); e.code=401; throw e; }
+      if(!r.ok) throw new Error('http '+r.status);
+      return r.json();
+    });
+  }
+  function apiPOST(){
+    return fetch(SYNC_URL,{method:'POST',headers:{'Authorization':'Bearer '+pass,'Content-Type':'application/json'},
+      body:JSON.stringify({events:store.events})}).then(function(r){
+      if(r.status===401){ var e=new Error('unauthorized'); e.code=401; throw e; }
+      if(!r.ok) throw new Error('http '+r.status);
+      return r.json();
+    });
+  }
+  function adopt(doc){
+    if(doc && Array.isArray(doc.events)){ mergeInto(doc.events); lastRev=doc.rev; saveLocal(); render(); if(modal.classList.contains('open')) renderActList(); }
+  }
+  function pushNow(){
+    if(!pass) return;
+    pushing=true; setSync('sync');
+    apiPOST().then(function(doc){ adopt(doc); pushing=false; setSync('ok'); })
+      .catch(function(err){ pushing=false; if(err.code===401){ handleAuthLost(); } else setSync('off'); });
+  }
+  function schedulePush(){
+    if(!pass) return;
+    clearTimeout(pushTimer);
+    pushTimer=setTimeout(pushNow, 700);
+  }
+  function poll(){
+    if(!pass || pushing) return;
+    apiGET().then(function(doc){ if(doc.rev!==lastRev) adopt(doc); setSync('ok'); })
+      .catch(function(err){ if(err.code===401){ handleAuthLost(); } else setSync('off'); });
+  }
+  function startSync(){
+    if(!pass){ setSync('local'); return; }
+    setSync('sync');
+    // initial: upload local + pull others in one merge
+    apiPOST().then(function(doc){ adopt(doc); setSync('ok'); })
+      .catch(function(err){ if(err.code===401){ handleAuthLost(); } else setSync('off'); });
+    clearInterval(pollTimer);
+    pollTimer=setInterval(poll, 15000);
+    window.addEventListener('online', pushNow);
+  }
+  function handleAuthLost(){
+    setSync('off');
+    // password no longer valid — force re-entry
+    localStorage.removeItem(PASS_KEY); pass=null; clearInterval(pollTimer);
+    showGate('Password changed — please re-enter.');
+  }
+
+  // ---------- password gate ----------
+  var gate=document.getElementById('gate'), gatePass=document.getElementById('gatePass'),
+      gateBtn=document.getElementById('gateBtn'), gateErr=document.getElementById('gateErr');
+  function showGate(msg){ gate.classList.remove('hide'); gateErr.textContent=msg||''; gatePass.value=''; setTimeout(function(){gatePass.focus();},50); }
+  function hideGate(){ gate.classList.add('hide'); }
+  function tryUnlock(candidate){
+    gateBtn.disabled=true; gateErr.textContent='Checking…';
+    var prev=pass; pass=candidate;
+    apiGET().then(function(doc){
+      localStorage.setItem(PASS_KEY, candidate); gateBtn.disabled=false; gateErr.textContent='';
+      hideGate(); adopt(doc); setSync('ok');
+      clearInterval(pollTimer); pollTimer=setInterval(poll,15000);
+      window.addEventListener('online', pushNow);
+    }).catch(function(err){
+      gateBtn.disabled=false;
+      if(err.code===401){ pass=prev; gateErr.textContent='Wrong password. Try again.'; }
+      else {
+        // server unreachable — allow entry if this matches a previously saved password (offline mode)
+        if(localStorage.getItem(PASS_KEY)===candidate){ hideGate(); setSync('off'); startSync(); }
+        else { pass=prev; gateErr.textContent='Can’t reach the sync server. Check connection and retry.'; }
+      }
+    });
+  }
+  gateBtn.addEventListener('click',function(){ var v=gatePass.value.trim(); if(v) tryUnlock(v); });
+  gatePass.addEventListener('keydown',function(e){ if(e.key==='Enter'){ var v=gatePass.value.trim(); if(v) tryUnlock(v); } });
+  document.getElementById('lockBtn').addEventListener('click',function(){
+    localStorage.removeItem(PASS_KEY); pass=null; clearInterval(pollTimer); setSync('local'); showGate('');
   });
+
+  // ---------- legend / weekday / category select ----------
+  var legend = document.getElementById('legend');
+  CATS.forEach(function(c){ var s=document.createElement('span'); s.innerHTML='<span class="swatch" style="background:'+c.c+'"></span>'+c.label; legend.appendChild(s); });
   var dowRow = document.getElementById('dowRow');
   DOW.forEach(function(d){ var el=document.createElement('div'); el.className='dow'; el.textContent=d; dowRow.appendChild(el); });
   var fCat = document.getElementById('fCat');
@@ -332,7 +462,6 @@
     var monthEndKey   = keyOf(new Date(viewY,viewM,days));
     var tKey = todayKey();
 
-    // build linear list of cells with leading pad
     var cells=[];
     for(var i=0;i<first;i++) cells.push(null);
     for(var d=1;d<=days;d++) cells.push({day:d,date:new Date(viewY,viewM,d),key:keyOf(new Date(viewY,viewM,d))});
@@ -343,7 +472,6 @@
       var realDays = slice.map(function(c,idx){return c?{c:c,col:idx}:null;}).filter(Boolean);
       var week=document.createElement('div'); week.className='week';
 
-      // day backgrounds + numbers
       realDays.forEach(function(rd){
         var bg=document.createElement('div');
         bg.className='daybg'+(rd.c.key===tKey?' today':'');
@@ -353,21 +481,20 @@
         week.appendChild(bg);
       });
 
-      var lanes=[]; // per-lane last end-column
+      var lanes=[];
       if(realDays.length){
         var wsDate=realDays[0].c.date, weDate=realDays[realDays.length-1].c.date;
         var wsKey=realDays[0].c.key,  weKey=realDays[realDays.length-1].c.key;
         var firstCol=realDays[0].col;
         var weekEvs = eventsBetween(wsKey,weKey).slice().sort(function(a,b){
           if(a.start!==b.start) return a.start<b.start?-1:1;
-          return (evEnd(b)>evEnd(a)?1:-1); // longer first on tie
+          return (evEnd(b)>evEnd(a)?1:-1);
         });
         weekEvs.forEach(function(e){
           var s = e.start<wsKey ? wsDate : parseKey(e.start);
           var en= evEnd(e)>weKey ? weDate : parseKey(evEnd(e));
           var sCol = firstCol + dayDiff(wsDate,s);
           var eCol = firstCol + dayDiff(wsDate,en);
-          // lane assignment
           var lane=0; while(lane<lanes.length && lanes[lane]>=sCol) lane++;
           lanes[lane]=eCol;
           var cat=catOf(e.cat);
@@ -377,10 +504,10 @@
           bar.style.gridRow=(lane+2);
           bar.style.background=cat.c+'22';
           bar.style.color=cat.c;
-          var left = e.start<wsKey ? '<span class="arw">‹</span>' : '';
-          var right= evEnd(e)>weKey ? '<span class="arw">›</span>' : '';
+          var leftA = e.start<wsKey ? '<span class="arw">‹</span>' : '';
+          var rightA= evEnd(e)>weKey ? '<span class="arw">›</span>' : '';
           var tm = e.time && e.start>=wsKey ? '<b style="color:'+cat.c+'">'+fmtTime(e.time)+'</b> ' : '';
-          bar.innerHTML='<span class="bx"></span>'+left+'<span class="bt">'+tm+esc(e.title)+'</span>'+right;
+          bar.innerHTML='<span class="bx"></span>'+leftA+'<span class="bt">'+tm+esc(e.title)+'</span>'+rightA;
           bar.title=e.title+(e.end&&e.end!==e.start?' ('+fmtShort(e.start)+' – '+fmtShort(evEnd(e))+')':'');
           bar.querySelector('.bx').addEventListener('click',(function(id){return function(ev){ev.stopPropagation();toggleDone(id);};})(e.id));
           bar.addEventListener('click',(function(sk){return function(ev){ev.stopPropagation();openDay(sk);};})(e.start<wsKey?wsKey:e.start));
@@ -403,10 +530,8 @@
       : '<b>'+pend+'</b> to do · <b>'+done+'</b> done this month';
   }
 
-  // ---------- sidebar list ----------
-  var sideList=document.getElementById('sideList');
-  var sideTitle=document.getElementById('sideTitle');
-  var sideCount=document.getElementById('sideCount');
+  // ---------- sidebar ----------
+  var sideList=document.getElementById('sideList'), sideTitle=document.getElementById('sideTitle'), sideCount=document.getElementById('sideCount');
   function renderSide(a,b){
     sideTitle.textContent = MONTHS[viewM]+' '+viewY;
     var evs = eventsBetween(a,b).slice().sort(function(x,y){
@@ -416,16 +541,12 @@
     sideCount.textContent = evs.length ? evs.length+(evs.length>1?' events':' event') : '';
     sideList.innerHTML='';
     evs.forEach(function(e){
-      var cat=catOf(e.cat);
-      var sd=parseKey(e.start), multi=(e.end&&e.end!==e.start);
-      var item=document.createElement('div');
-      item.className='side-item'+(e.done?' done':'');
-      var meta=[];
-      if(e.time) meta.push(fmtTime(e.time));
+      var cat=catOf(e.cat); var sd=parseKey(e.start), multi=(e.end&&e.end!==e.start);
+      var item=document.createElement('div'); item.className='side-item'+(e.done?' done':'');
+      var meta=[]; if(e.time) meta.push(fmtTime(e.time));
       meta.push('<span class="cdot" style="background:'+cat.c+'"></span>'+cat.label);
       if(multi) meta.push('<span class="range">→ '+fmtShort(evEnd(e))+'</span>');
-      item.innerHTML=
-        '<div class="side-check"></div>'+
+      item.innerHTML='<div class="side-check"></div>'+
         '<div class="sd"><div class="dd">'+sd.getDate()+'</div><div class="mm">'+MSHORT[sd.getMonth()]+'</div></div>'+
         '<div class="si"><div class="st">'+esc(e.title)+'</div><div class="sm">'+meta.join(' · ')+'</div></div>';
       item.querySelector('.side-check').addEventListener('click',function(ev){ev.stopPropagation();toggleDone(e.id);});
@@ -435,45 +556,30 @@
   }
 
   // ---------- day modal ----------
-  var modal=document.getElementById('modal');
-  var sheetTitle=document.getElementById('sheetTitle');
-  var sheetSub=document.getElementById('sheetSub');
-  var actListEl=document.getElementById('actList');
-
+  var modal=document.getElementById('modal'), sheetTitle=document.getElementById('sheetTitle'),
+      sheetSub=document.getElementById('sheetSub'), actListEl=document.getElementById('actList');
   function openDay(k){
     openKey=k; resetForm(k);
     var d=parseKey(k);
     sheetTitle.textContent = DOW[d.getDay()]+', '+MONTHS[d.getMonth()]+' '+d.getDate();
-    renderActList();
-    modal.classList.add('open');
+    renderActList(); modal.classList.add('open');
     setTimeout(function(){ document.getElementById('fTitle').focus(); }, 60);
   }
   function closeDay(){ modal.classList.remove('open'); openKey=null; }
-
   function renderActList(){
     var evs=eventsOnDay(openKey);
     var pend=evs.filter(function(e){return !e.done;}).length;
     sheetSub.textContent = evs.length===0 ? '' : pend+' to do · '+(evs.length-pend)+' done';
     actListEl.innerHTML='';
-    evs.slice().sort(function(a,b){
-      if(!!a.done!==!!b.done) return a.done?1:-1;
-      return (a.time||'~').localeCompare(b.time||'~');
-    }).forEach(function(e){
+    evs.slice().sort(function(a,b){ if(!!a.done!==!!b.done) return a.done?1:-1; return (a.time||'~').localeCompare(b.time||'~'); }).forEach(function(e){
       var cat=catOf(e.cat);
-      var el=document.createElement('div');
-      el.className='act'+(e.done?' done':'');
-      el.style.borderLeftColor=cat.c;
-      var meta=[];
-      if(e.time) meta.push(fmtTime(e.time));
+      var el=document.createElement('div'); el.className='act'+(e.done?' done':''); el.style.borderLeftColor=cat.c;
+      var meta=[]; if(e.time) meta.push(fmtTime(e.time));
       meta.push('<span class="cat" style="color:'+cat.c+'">'+cat.label+'</span>');
       if(e.end && e.end!==e.start) meta.push('<span class="range">'+fmtShort(e.start)+' – '+fmtShort(evEnd(e))+'</span>');
-      el.innerHTML=
-        '<div class="check" role="checkbox" aria-checked="'+(!!e.done)+'"></div>'+
-        '<div class="body"><div class="t">'+esc(e.title)+'</div>'+
-        '<div class="meta">'+meta.join(' · ')+'</div>'+
-        (e.note?'<div class="note">'+esc(e.note)+'</div>':'')+'</div>'+
-        '<div class="ops"><button class="iconbtn edit" title="Edit">✎</button>'+
-        '<button class="iconbtn del" title="Delete">🗑</button></div>';
+      el.innerHTML='<div class="check"></div><div class="body"><div class="t">'+esc(e.title)+'</div>'+
+        '<div class="meta">'+meta.join(' · ')+'</div>'+(e.note?'<div class="note">'+esc(e.note)+'</div>':'')+'</div>'+
+        '<div class="ops"><button class="iconbtn edit" title="Edit">✎</button><button class="iconbtn del" title="Delete">🗑</button></div>';
       el.querySelector('.check').addEventListener('click',function(){ toggleDone(e.id); });
       el.querySelector('.edit').addEventListener('click',function(){ startEdit(e); });
       el.querySelector('.del').addEventListener('click',function(){ delEvent(e.id); });
@@ -482,78 +588,65 @@
   }
 
   // ---------- form / CRUD ----------
-  var fTitle=document.getElementById('fTitle'), fCatEl=document.getElementById('fCat'),
-      fTime=document.getElementById('fTime'), fStart=document.getElementById('fStart'),
-      fEnd=document.getElementById('fEnd'), fNote=document.getElementById('fNote'),
-      fSave=document.getElementById('fSave'), fCancel=document.getElementById('fCancel'),
-      formTitle=document.getElementById('formTitle');
-
+  var fTitle=document.getElementById('fTitle'), fCatEl=document.getElementById('fCat'), fTime=document.getElementById('fTime'),
+      fStart=document.getElementById('fStart'), fEnd=document.getElementById('fEnd'), fNote=document.getElementById('fNote'),
+      fSave=document.getElementById('fSave'), fCancel=document.getElementById('fCancel'), formTitle=document.getElementById('formTitle');
   function resetForm(dayKey){
     editingId=null; fTitle.value=''; fCatEl.value='work'; fTime.value='';
     fStart.value=dayKey||openKey||todayKey(); fEnd.value=fStart.value; fNote.value='';
     fSave.textContent='Add'; formTitle.textContent='Add event'; fCancel.style.display='none';
   }
   function startEdit(e){
-    editingId=e.id; fTitle.value=e.title; fCatEl.value=e.cat||'other';
-    fTime.value=e.time||''; fStart.value=e.start; fEnd.value=evEnd(e); fNote.value=e.note||'';
-    fSave.textContent='Save'; formTitle.textContent='Edit event'; fCancel.style.display='';
-    fTitle.focus();
+    editingId=e.id; fTitle.value=e.title; fCatEl.value=e.cat||'other'; fTime.value=e.time||'';
+    fStart.value=e.start; fEnd.value=evEnd(e); fNote.value=e.note||'';
+    fSave.textContent='Save'; formTitle.textContent='Edit event'; fCancel.style.display=''; fTitle.focus();
   }
   function commit(){
-    var title=fTitle.value.trim();
-    if(!title){ fTitle.focus(); return; }
-    var start=fStart.value || openKey || todayKey();
-    var end=fEnd.value || start;
-    if(end<start) end=start; // guard
+    var title=fTitle.value.trim(); if(!title){ fTitle.focus(); return; }
+    var start=fStart.value || openKey || todayKey(); var end=fEnd.value || start; if(end<start) end=start;
     if(editingId){
       var e=store.events.find(function(x){return x.id===editingId;});
-      if(e){ e.title=title; e.cat=fCatEl.value; e.time=fTime.value; e.start=start; e.end=end; e.note=fNote.value.trim(); }
+      if(e){ e.title=title; e.cat=fCatEl.value; e.time=fTime.value; e.start=start; e.end=end; e.note=fNote.value.trim(); e.updatedAt=nowMs(); }
       toast('Updated');
     } else {
-      store.events.push({id:uid(),title:title,cat:fCatEl.value,time:fTime.value,start:start,end:end,note:fNote.value.trim(),done:false});
+      store.events.push({id:uid(),title:title,cat:fCatEl.value,time:fTime.value,start:start,end:end,note:fNote.value.trim(),done:false,updatedAt:nowMs()});
       toast(start===end?'Added':'Added (multi-day)');
     }
-    save(); resetForm(openKey); renderActList(); render();
+    saveLocal(); resetForm(openKey); renderActList(); render(); schedulePush();
   }
   function toggleDone(id){
-    var e=store.events.find(function(x){return x.id===id;});
-    if(!e) return; e.done=!e.done; save();
-    if(modal.classList.contains('open')) renderActList(); render();
+    var e=store.events.find(function(x){return x.id===id;}); if(!e) return;
+    e.done=!e.done; e.updatedAt=nowMs(); saveLocal();
+    if(modal.classList.contains('open')) renderActList(); render(); schedulePush();
   }
   function delEvent(id){
-    var i=store.events.findIndex(function(x){return x.id===id;});
-    if(i>-1){ store.events.splice(i,1); save(); if(editingId===id) resetForm(openKey); renderActList(); render(); toast('Deleted'); }
+    var e=store.events.find(function(x){return x.id===id;}); if(!e) return;
+    e.deleted=true; e.updatedAt=nowMs(); saveLocal();
+    if(editingId===id) resetForm(openKey); renderActList(); render(); schedulePush(); toast('Deleted');
   }
 
   // ---------- helpers ----------
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-  function fmtTime(t){ var p=String(t).split(':'); if(p.length<2) return t; var h=+p[0],m=p[1];
-    var ap=h>=12?'PM':'AM'; var hh=h%12; if(hh===0) hh=12; return hh+':'+m+' '+ap; }
+  function fmtTime(t){ var p=String(t).split(':'); if(p.length<2) return t; var h=+p[0],m=p[1]; var ap=h>=12?'PM':'AM'; var hh=h%12; if(hh===0) hh=12; return hh+':'+m+' '+ap; }
   function fmtShort(k){ var d=parseKey(k); return MSHORT[d.getMonth()]+' '+d.getDate(); }
   var toastEl=document.getElementById('toast'), toastT;
-  function toast(msg){ toastEl.textContent=msg; toastEl.classList.add('show');
-    clearTimeout(toastT); toastT=setTimeout(function(){toastEl.classList.remove('show');},1600); }
+  function toast(msg){ toastEl.textContent=msg; toastEl.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(function(){toastEl.classList.remove('show');},1600); }
 
   // ---------- export / import ----------
   function exportData(){
     var blob=new Blob([JSON.stringify(store,null,2)],{type:'application/json'});
     var url=URL.createObjectURL(blob); var a=document.createElement('a');
-    a.href=url; a.download='activity-planner-backup.json'; document.body.appendChild(a); a.click();
-    a.remove(); URL.revokeObjectURL(url); toast('Exported backup');
+    a.href=url; a.download='trip-planner-backup.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); toast('Exported backup');
   }
   function importData(file){
     var r=new FileReader();
     r.onload=function(){
       try{ var o=JSON.parse(r.result);
-        if(o && o.activities && !o.events){ // allow importing old v1 backups
-          var evs=[]; Object.keys(o.activities).forEach(function(k){ (o.activities[k]||[]).forEach(function(e){
-            evs.push({id:e.id||uid(),title:e.title,cat:e.cat||'other',start:k,end:k,time:e.time||'',note:e.note||'',done:!!e.done}); }); });
-          o={version:2,events:evs};
-        }
+        if(o && o.activities && !o.events){ var evs=[]; Object.keys(o.activities).forEach(function(k){ (o.activities[k]||[]).forEach(function(e){ evs.push({id:e.id||uid(),title:e.title,cat:e.cat||'other',start:k,end:k,time:e.time||'',note:e.note||'',done:!!e.done,updatedAt:nowMs()}); }); }); o={version:2,events:evs}; }
         if(!o || !Array.isArray(o.events)) throw 0;
-        if(!confirm('Import will REPLACE your current plan with the backup. Continue?')) return;
-        store=o; store.version=2; save(); render();
-        if(modal.classList.contains('open')) renderActList(); toast('Imported');
+        if(!confirm('Import will MERGE this backup into your plan. Continue?')) return;
+        o.events.forEach(function(e){ if(e && !e.updatedAt) e.updatedAt=nowMs(); });
+        mergeInto(o.events); saveLocal(); render(); if(modal.classList.contains('open')) renderActList(); schedulePush(); toast('Imported');
       }catch(e){ toast('Invalid backup file'); }
     };
     r.readAsText(file);
@@ -574,7 +667,9 @@
   document.getElementById('importBtn').addEventListener('click',function(){ document.getElementById('importFile').click(); });
   document.getElementById('importFile').addEventListener('change',function(e){ if(e.target.files[0]) importData(e.target.files[0]); e.target.value=''; });
 
+  // ---------- boot ----------
   render();
+  if(pass){ hideGate(); startSync(); } else { setSync('local'); showGate(''); }
 })();
 </script>
 </body>

@@ -419,11 +419,9 @@
   function tryUnlock(candidate){
     gateBtn.disabled=true; gateErr.textContent='Checking…';
     var prev=pass; pass=candidate;
-    apiGET().then(function(doc){
+    apiGET().then(function(){
       localStorage.setItem(PASS_KEY, candidate); gateBtn.disabled=false; gateErr.textContent='';
-      hideGate(); adopt(doc); setSync('ok');
-      clearInterval(pollTimer); pollTimer=setInterval(poll,15000);
-      window.addEventListener('online', pushNow);
+      hideGate(); startSync(); // uploads local edits + pulls others, then polls
     }).catch(function(err){
       gateBtn.disabled=false;
       if(err.code===401){ pass=prev; gateErr.textContent='Wrong password. Try again.'; }

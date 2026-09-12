@@ -11,152 +11,122 @@
 <meta property="og:type" content="website">
 <style>
   :root{
-    --bg:#f5f3ee; --bg2:#eeeae2; --surface:#fffdf9; --surface2:#f0ece4;
-    --border:#ddd8ce; --border2:#c9c2b6;
-    --text:#1d252b; --muted:#5f696e; --dim:#858b8d;
-    --accent:#285a68; --accent-dim:#3f7380; --warm:#b86f52;
-    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
-    --serif:Georgia,"Times New Roman",serif;
-    --maxw:1080px;
+    --bg:#fafafa;--bg2:#f4f4f2;--surface:#ffffff;--surface2:#f1f2f0;
+    --border:#dedfdd;--border2:#bfc3c0;
+    --text:#1b1e1d;--muted:#5f6663;--dim:#858b88;
+    --accent:#155e75;--warm:#a54f32;
+    --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --maxw:1060px;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{
-    background:var(--bg);color:var(--text);font-family:var(--sans);
-    line-height:1.68;-webkit-font-smoothing:antialiased;overflow-x:hidden;
-  }
-  body::before{
-    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
-    background:
-      radial-gradient(700px 420px at 88% -5%,rgba(184,111,82,.10),transparent 70%),
-      radial-gradient(650px 500px at -8% 42%,rgba(40,90,104,.08),transparent 72%);
-  }
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased}
   a{color:inherit;text-decoration:none}
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(20px,5vw,40px)}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
   .accent{color:var(--warm)}
 
-  nav{
-    position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);
-    background:rgba(245,243,238,.88);border-bottom:1px solid rgba(201,194,182,.75);
-  }
-  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
-  .brand{font-weight:700;font-size:15px;letter-spacing:.01em;display:flex;align-items:center;gap:10px}
-  .brand .blip{width:9px;height:9px;border-radius:50%;background:var(--warm)}
-  .navlinks{display:flex;gap:24px;font-size:13px;font-weight:600}
-  .navlinks a{color:var(--muted);transition:color .2s;position:relative}
-  .navlinks a:hover,.navlinks a.active{color:var(--accent)}
-  .navlinks a.active::after{content:"";position:absolute;left:0;right:0;bottom:-24px;height:2px;background:var(--warm)}
+  nav{position:sticky;top:0;z-index:50;background:rgba(250,250,250,.95);border-bottom:1px solid var(--border)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{font-weight:700;font-size:15px;display:flex;align-items:center;gap:9px}
+  .brand .blip{width:7px;height:7px;border-radius:50%;background:var(--warm)}
+  .navlinks{display:flex;gap:24px;font-size:13px}
+  .navlinks a{color:var(--muted)}
+  .navlinks a:hover,.navlinks a.active{color:var(--text)}
+  .navlinks a.active::after{content:"";display:block;height:1px;background:var(--text);margin-top:3px}
   .navlinks .num{display:none}
-  .menu-btn{display:none;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-size:13px;padding:7px 13px;border-radius:999px;cursor:pointer}
+  .menu-btn{display:none;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-size:13px;padding:6px 11px;border-radius:5px;cursor:pointer}
   @media(max-width:880px){.navlinks{display:none}.menu-btn{display:block}}
 
-  header{padding:clamp(38px,7vh,72px) 0 clamp(46px,8vh,84px)}
-  .hero-panel{
-    position:relative;overflow:hidden;min-height:470px;border:1px solid var(--border);
-    border-radius:26px;padding:clamp(42px,8vw,86px);display:flex;align-items:center;
-    background:linear-gradient(135deg,rgba(255,253,249,.98),rgba(239,235,226,.96));
-    box-shadow:0 24px 70px rgba(44,49,48,.08);
-  }
-  .hero-panel::after{
-    content:"";position:absolute;width:340px;height:340px;border-radius:50%;right:-120px;top:-140px;
-    background:linear-gradient(145deg,rgba(184,111,82,.16),rgba(40,90,104,.08));filter:blur(2px);
-  }
-  .hero-copy{position:relative;z-index:1;max-width:760px}
-  .eyebrow{color:var(--accent);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:24px}
-  .eyebrow .caret{display:none}
-  h1{font-family:var(--serif);font-size:clamp(3rem,8vw,5.6rem);line-height:.98;font-weight:500;letter-spacing:-.045em;margin-bottom:22px}
-  h1 .grad{color:var(--warm)}
-  .role-line{font-size:clamp(1.2rem,3.2vw,1.75rem);color:var(--muted);font-weight:400;letter-spacing:-.015em;margin-bottom:24px;max-width:700px}
-  .role-line b{color:var(--text);font-weight:600}
-  .lede{max-width:650px;color:var(--muted);font-size:1.05rem;margin-bottom:34px}
-  .cta{display:flex;flex-wrap:wrap;gap:12px}
-  .btn{font-size:14px;font-weight:650;padding:11px 18px;border-radius:999px;border:1px solid var(--border2);color:var(--text);background:rgba(255,253,249,.65);transition:.2s;display:inline-flex;align-items:center;gap:9px}
-  .btn:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:0 8px 24px rgba(44,49,48,.08)}
-  .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-  .btn.primary:hover{background:#1f4c58}
-  .btn svg{width:16px;height:16px}
+  header{padding:78px 0 72px;border-bottom:1px solid var(--border)}
+  .hero-panel{padding:0;border:0;background:none;min-height:0}
+  .hero-copy{max-width:790px}
+  .eyebrow{font-size:13px;font-weight:600;color:var(--accent);margin-bottom:18px}
+  h1{font-size:clamp(3rem,8vw,5.2rem);line-height:1;letter-spacing:-.055em;font-weight:720;margin-bottom:24px}
+  h1 .grad{color:inherit}
+  .role-line{font-size:clamp(1.25rem,3vw,1.7rem);line-height:1.4;color:var(--text);letter-spacing:-.02em;margin-bottom:20px;max-width:740px}
+  .role-line b{font-weight:inherit}
+  .lede{max-width:680px;color:var(--muted);font-size:1.03rem;margin-bottom:30px}
+  .cta{display:flex;flex-wrap:wrap;gap:10px}
+  .btn{font-size:14px;font-weight:600;padding:9px 14px;border-radius:6px;border:1px solid var(--border2);color:var(--text);background:var(--surface);display:inline-flex;align-items:center;gap:8px}
+  .btn:hover{border-color:var(--text)}
+  .btn.primary{background:var(--text);color:#fff;border-color:var(--text)}
+  .btn.primary:hover{background:#343837}
+  .btn svg{width:15px;height:15px}
 
-  section{padding:clamp(58px,9vh,94px) 0;scroll-margin-top:78px}
-  .sec-head{display:flex;align-items:center;gap:16px;margin-bottom:36px}
-  .sec-head .idx{display:none}
-  .sec-head h2{font-family:var(--serif);font-size:clamp(2rem,4.5vw,3rem);font-weight:500;letter-spacing:-.035em;white-space:nowrap}
-  .sec-head .line{flex:1;height:1px;background:linear-gradient(90deg,var(--border2),transparent)}
-  @media(max-width:520px){.sec-head h2{white-space:normal;font-size:1.9rem}.sec-head .line{display:none}}
+  section{padding:76px 0;border-bottom:1px solid var(--border);scroll-margin-top:64px}
+  .sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:34px}
+  .sec-head .idx,.sec-head .line{display:none}
+  .sec-head h2{font-size:1.75rem;line-height:1.2;font-weight:700;letter-spacing:-.03em}
 
-  .about-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(270px,.8fr);gap:54px;align-items:start}
+  .about-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(260px,.75fr);gap:58px;align-items:start}
   @media(max-width:820px){.about-grid{grid-template-columns:1fr;gap:30px}}
-  .about-lead{font-family:var(--serif);color:var(--text);font-size:clamp(1.35rem,2.5vw,1.7rem);line-height:1.42;letter-spacing:-.025em;margin-bottom:28px;max-width:720px}
+  .about-lead{color:var(--text);font-size:1.25rem;line-height:1.55;letter-spacing:-.015em;margin-bottom:26px;max-width:700px}
   .about-themes{border-top:1px solid var(--border)}
-  .about-theme{display:grid;grid-template-columns:14px 1fr;gap:15px;padding:19px 0;border-bottom:1px solid var(--border)}
-  .theme-mark{width:9px;height:9px;border-radius:50%;background:var(--warm);margin-top:8px}
-  .about-theme:nth-child(2) .theme-mark{background:var(--accent)}
-  .about-theme:nth-child(3) .theme-mark{background:#8d7a65}
-  .about-theme h3{font-size:1rem;letter-spacing:-.01em;margin-bottom:4px}
-  .about-theme p{color:var(--muted);font-size:.96rem;line-height:1.6}
-  .quickfacts{border-radius:18px;background:#20373d;color:#fff;padding:26px;box-shadow:0 18px 42px rgba(32,55,61,.14)}
-  .fact-label{font-family:var(--serif);font-size:1.35rem;letter-spacing:-.02em;margin-bottom:12px}
-  .quickfacts .row{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:13.5px}
+  .about-theme{padding:18px 0;border-bottom:1px solid var(--border)}
+  .theme-mark{display:none}
+  .about-theme h3{font-size:15px;margin-bottom:5px}
+  .about-theme p{color:var(--muted);font-size:.96rem}
+  .quickfacts{border:1px solid var(--border);background:var(--surface);padding:20px;border-radius:7px}
+  .fact-label{font-size:15px;font-weight:700;margin-bottom:9px}
+  .quickfacts .row{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
   .quickfacts .row:last-child{border-bottom:0}
-  .quickfacts .k{color:rgba(255,255,255,.56)}
-  .quickfacts .v{color:#fff;text-align:right}
-  .quickfacts .accent{color:#efb495}
-  @media(max-width:520px){.about-theme{grid-template-columns:10px 1fr;gap:12px}.quickfacts{padding:22px}}
+  .quickfacts .k{color:var(--dim)}
+  .quickfacts .v{color:var(--text);text-align:right}
+  .quickfacts .accent{color:var(--warm)}
 
-  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
   #public .cards{grid-template-columns:repeat(3,1fr)}
   @media(max-width:900px){#public .cards{grid-template-columns:1fr}}
   @media(max-width:720px){.cards{grid-template-columns:1fr}}
-  .card{border:1px solid var(--border);border-radius:17px;background:rgba(255,253,249,.86);padding:25px;transition:.22s;position:relative;overflow:hidden}
-  .card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 14px 34px rgba(44,49,48,.07)}
-  .card .ico{font-size:11px;font-weight:750;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);background:var(--surface2);border-radius:999px;padding:5px 9px;display:inline-block;margin-bottom:14px}
-  .card h3{font-size:1.12rem;margin-bottom:8px;letter-spacing:-.015em}
-  .card p{color:var(--muted);font-size:.96rem}
-  .project-thumb{display:block;width:calc(100% + 50px);height:205px;object-fit:cover;margin:-25px -25px 22px;background:var(--surface2);border-bottom:1px solid var(--border)}
-  .project-thumb.diagram{object-fit:contain;padding:16px}
+  .card{border:1px solid var(--border);border-radius:8px;background:var(--surface);padding:22px;position:relative;overflow:hidden}
+  .card:hover{border-color:var(--border2)}
+  .card .ico{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);display:block;margin-bottom:11px}
+  .card h3{font-size:1.08rem;line-height:1.35;margin-bottom:7px;letter-spacing:-.015em}
+  .card p{color:var(--muted);font-size:.94rem}
+  .project-thumb{display:block;width:calc(100% + 44px);height:205px;object-fit:cover;margin:-22px -22px 19px;background:var(--surface2);border-bottom:1px solid var(--border)}
+  .project-thumb.diagram{object-fit:contain;padding:14px}
 
-  .projects{display:grid;gap:18px}
-  .proj{border:1px solid var(--border);border-radius:17px;background:rgba(255,253,249,.86);padding:27px 29px;transition:.22s}
-  .proj:hover{border-color:var(--border2);box-shadow:0 14px 34px rgba(44,49,48,.07)}
-  .proj-top{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:10px;flex-wrap:wrap}
-  .proj h3{font-size:1.28rem;letter-spacing:-.02em}
-  .proj .kind{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
-  .proj p{color:var(--muted);margin-bottom:16px;max-width:820px}
-  .tags{display:flex;flex-wrap:wrap;gap:8px}
-  .tag{font-size:11.5px;color:var(--muted);background:var(--surface2);border-radius:999px;padding:5px 11px}
-  .subhead{font-family:var(--serif);font-size:1.55rem;font-weight:500;color:var(--text);letter-spacing:-.02em;margin:42px 0 18px}
+  .projects{display:grid;gap:12px}
+  .proj{border:1px solid var(--border);border-radius:8px;background:var(--surface);padding:23px 25px}
+  .proj:hover{border-color:var(--border2)}
+  .proj-top{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:8px;flex-wrap:wrap}
+  .proj h3{font-size:1.17rem;letter-spacing:-.015em}
+  .proj .kind{font-size:11px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+  .proj p{color:var(--muted);font-size:.96rem;margin-bottom:14px;max-width:820px}
+  .tags{display:flex;flex-wrap:wrap;gap:6px}
+  .tag{font-size:11px;color:var(--muted);background:var(--surface2);border-radius:4px;padding:4px 8px}
+  .subhead{font-size:1.15rem;font-weight:700;color:var(--text);margin:38px 0 15px}
   .card-link{display:block}
-  .card-link .arrow{color:var(--warm);font-size:12px;margin-left:5px}
+  .card-link .arrow{color:var(--accent);font-size:12px;margin-left:4px}
 
-  .timeline{position:relative;padding-left:28px}
-  .timeline::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--border2)}
-  .job{position:relative;padding-bottom:31px}
+  .timeline{position:relative;padding-left:24px}
+  .timeline::before{content:"";position:absolute;left:4px;top:6px;bottom:6px;width:1px;background:var(--border2)}
+  .job{position:relative;padding-bottom:28px}
   .job:last-child{padding-bottom:0}
-  .job::before{content:"";position:absolute;left:-27px;top:7px;width:11px;height:11px;border-radius:50%;background:var(--bg);border:2px solid var(--warm)}
-  .job .when{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--dim);margin-bottom:3px}
-  .job h3{font-size:1.08rem}
+  .job::before{content:"";position:absolute;left:-24px;top:7px;width:9px;height:9px;border-radius:50%;background:var(--bg);border:2px solid var(--accent)}
+  .job .when{font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--dim);margin-bottom:3px}
+  .job h3{font-size:1.03rem}
   .job .co{color:var(--accent);font-weight:700}
-  .job p{color:var(--muted);font-size:.97rem;margin-top:5px;max-width:760px}
+  .job p{color:var(--muted);font-size:.95rem;margin-top:4px;max-width:760px}
 
-  .skillgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  .skillgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px 34px}
   @media(max-width:720px){.skillgrid{grid-template-columns:1fr}}
-  .skillcol h4{font-size:13px;color:var(--accent);margin-bottom:12px;letter-spacing:.04em}
-  .chips{display:flex;flex-wrap:wrap;gap:8px}
-  .chip{font-size:12.5px;color:var(--text);background:rgba(255,253,249,.82);border:1px solid var(--border);border-radius:999px;padding:7px 12px;transition:.2s}
-  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .skillcol h4{font-size:13px;margin-bottom:10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-size:12px;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:5px 8px}
 
-  .contact-box{border-radius:22px;background:var(--accent);color:#fff;padding:clamp(38px,7vw,62px);text-align:center}
-  .contact-box h2{font-family:var(--serif);font-size:clamp(2rem,5vw,3rem);font-weight:500;letter-spacing:-.03em;margin-bottom:12px}
-  .contact-box p{color:rgba(255,255,255,.78);max-width:540px;margin:0 auto 28px}
-  .contact-box .eyebrow{color:rgba(255,255,255,.7)}
-  .contact-box .btn{border-color:rgba(255,255,255,.38);color:#fff;background:transparent}
-  .contact-box .btn.primary{background:#fff;color:var(--accent);border-color:#fff}
-  .contact-links{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+  .contact-box{border:1px solid var(--border);border-radius:8px;background:var(--surface);padding:44px;text-align:left}
+  .contact-box h2{font-size:clamp(1.7rem,4vw,2.3rem);line-height:1.25;letter-spacing:-.035em;margin-bottom:10px}
+  .contact-box p{color:var(--muted);max-width:590px;margin:0 0 24px}
+  .contact-box .eyebrow{color:var(--accent)}
+  .contact-links{display:flex;flex-wrap:wrap;gap:10px}
 
-  footer{border-top:1px solid var(--border);padding:27px 0;color:var(--dim);font-size:12.5px}
+  footer{padding:24px 0;color:var(--dim);font-size:12px}
   footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 
-  html.js .reveal{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease}
+  html.js .reveal{opacity:0;transform:translateY(10px);transition:opacity .35s ease,transform .35s ease}
   html.js .reveal.in{opacity:1;transform:none}
+  @media(max-width:600px){.wrap{padding:0 20px}header{padding:54px 0}.contact-box{padding:28px 22px}.project-thumb{height:185px}}
   @media(prefers-reduced-motion:reduce){html.js .reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
 </style>
 </head>
@@ -182,13 +152,11 @@
   <div class="wrap">
     <div class="hero-panel">
        <div class="hero-copy">
-    <div class="eyebrow reveal">AI systems &middot; robotics &middot; performance engineering</div>
-    <h1 class="reveal">Piyush <span class="grad">Medikeri</span></h1>
-    <div class="role-line reveal">I build and harden systems where <b>AI meets the physical world.</b></div>
+    <h1 class="reveal">Piyush Medikeri</h1>
+    <div class="role-line reveal">Systems software engineer working on AI infrastructure and robotics.</div>
     <p class="lede reveal">
-      Systems software engineer working across AI inference, GPU performance, and robotics. I build
-      reproducible benchmarks, production-minded tooling, and developer experiences, from early
-      autonomous systems to modern large-model and physical-AI platforms.
+      I build benchmarking and evaluation systems, tune LLM/VLM inference, and develop robotics tools.
+      I currently work on NVIDIA's AI and robotics team in Santa Clara.
     </p>
     <div class="cta reveal">
       <a class="btn primary" href="#projects">View work</a>
@@ -213,29 +181,29 @@
     <div class="about-grid about">
       <div class="reveal">
         <p class="about-lead">
-          I build reliable systems where AI software meets physical machines, balancing model
-          behavior, hardware constraints, and the developer experience.
+          I work across the path from a model running on hardware to a developer deciding whether
+          the system is fast, reliable, and useful.
         </p>
         <div class="about-themes">
           <article class="about-theme">
             <span class="theme-mark" aria-hidden="true"></span>
             <div>
-              <h3>Measure and improve</h3>
-              <p>I turn performance questions into reproducible evidence through cross-platform LLM/VLM benchmarks, deep technical reviews, and automation that shortens evaluation cycles.</p>
+              <h3>Benchmarking and evaluation</h3>
+              <p>I compare LLM and VLM stacks across NVIDIA, Apple Silicon, and AMD hardware, then turn the results into repeatable recipes, dashboards, and concrete engineering feedback.</p>
             </div>
           </article>
           <article class="about-theme">
             <span class="theme-mark" aria-hidden="true"></span>
             <div>
-              <h3>Make complex platforms usable</h3>
-              <p>I translate engineering work into demos, reviewer guides, launch material, and hands-on courses that help developers and technical audiences understand what a platform can do.</p>
+              <h3>Developer work</h3>
+              <p>I build evaluation harnesses, demos, reviewer guides, and hands-on courses. The goal is practical: make new platforms easier to test, explain, and use.</p>
             </div>
           </article>
           <article class="about-theme">
             <span class="theme-mark" aria-hidden="true"></span>
             <div>
-              <h3>Grounded in robotics</h3>
-              <p>My foundation is motion planning, perception, and ROS 2 manipulation on edge hardware, experience that keeps my systems work connected to real machines and real constraints.</p>
+              <h3>Robotics</h3>
+              <p>My earlier work focused on motion planning, perception, and ROS 2 manipulation on Jetson and x86. That background still shapes how I evaluate AI systems.</p>
             </div>
           </article>
         </div>
@@ -258,22 +226,22 @@
     <div class="sec-head reveal"><span class="idx">02</span><h2>What I work on</h2><span class="line"></span></div>
     <div class="cards">
       <div class="card reveal">
-        <span class="ico">01</span>
+        <span class="ico">Performance</span>
         <h3>AI Inference &amp; Benchmarking</h3>
         <p>Cross-platform LLM/VLM benchmarking across NVIDIA, Apple Silicon, and AMD, reproducible recipes, CI pipelines, and live dashboards. Serving and quantization tuning on vLLM and TensorRT-LLM.</p>
       </div>
       <div class="card reveal">
-        <span class="ico">02</span>
+        <span class="ico">Robotics</span>
         <h3>Robotics &amp; Simulation</h3>
         <p>GPU-accelerated robotics on the Isaac stack, Isaac ROS/Sim/Lab, MoveIt 2, ROS 2 manipulation and perception pipelines validated on Jetson and x86.</p>
       </div>
       <div class="card reveal">
-        <span class="ico">03</span>
+        <span class="ico">Evaluation</span>
         <h3>Developer Experience &amp; Evaluation</h3>
         <p>Agent-driven review harnesses that automate documentation testing, edge-case probing, and structured reporting, functional and quality reviews that produce prioritized, actionable fixes.</p>
       </div>
       <div class="card reveal">
-        <span class="ico">04</span>
+        <span class="ico">Developer communication</span>
         <h3>Demos &amp; Technical Storytelling</h3>
         <p>Launch demos, reviewer guides, and hands-on DLI courses for DGX Spark and Jetson, plus talks, presentations, and technical press support that put the platform in developers' hands.</p>
       </div>
@@ -299,14 +267,13 @@
       </a>
       <div class="proj reveal">
         <div class="proj-top">
-          <h3>Production-Minded Local Agent Stack</h3>
+          <h3>Local AI Briefing System</h3>
           <span class="kind">Local AI · reliability</span>
         </div>
         <p>
-          Designed and operated a scheduled research and briefing system on a DGX Spark with a locally
-          served Qwen model. Added system services, health checks, watchdogs, deduplication, and an
-          independent delivery safety net after real production failures, turning an experiment
-          into an observable, recoverable workflow.
+          Built a scheduled research and briefing service around a locally served Qwen model.
+          System services, health checks, watchdogs, and deduplication keep the workflow observable
+          and recoverable when inference or delivery fails.
         </p>
         <div class="tags"><span class="tag">llama.cpp</span><span class="tag">Qwen</span><span class="tag">DGX Spark</span><span class="tag">systemd</span><span class="tag">Agent Workflows</span><span class="tag">Reliability</span></div>
       </div>
@@ -368,7 +335,7 @@
 
 <section id="public">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="idx">04</span><h2>Public work &amp; interests</h2><span class="line"></span></div>
+    <div class="sec-head reveal"><span class="idx">04</span><h2>Selected public work</h2><span class="line"></span></div>
     <div class="cards">
       <a class="card card-link reveal" href="https://nvidia-ai-iot.github.io/isaac-sim-jetson-hil-course-doc/" target="_blank" rel="noopener noreferrer">
         <span class="ico">COURSE</span>
@@ -457,9 +424,9 @@
 <section id="contact">
   <div class="wrap">
     <div class="contact-box reveal">
-      <div class="eyebrow" style="justify-content:center"><span class="caret">&gt;</span> let's talk</div>
-      <h2>Building something at the edge of AI &amp; robotics?</h2>
-      <p>I'm always up for a conversation about GPU systems, physical AI, benchmarking, or where robotics is headed.</p>
+      <div class="eyebrow">Contact</div>
+      <h2>Interested in working together?</h2>
+      <p>I am open to senior engineering roles spanning AI systems, performance, developer tools, and robotics.</p>
       <div class="contact-links">
         <a class="btn primary" href="mailto:piyushmedikeri1997@gmail.com">piyushmedikeri1997@gmail.com</a>
         <a class="btn" href="https://linkedin.com/in/piyush-rajesh-medikeri" target="_blank" rel="noopener">LinkedIn</a>

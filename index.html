@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Piyush Medikeri — Systems Software Engineer, AI &amp; Robotics</title>
+<title>Piyush Medikeri | Systems Software Engineer, AI &amp; Robotics</title>
 <meta name="description" content="Piyush Medikeri is a systems software engineer specializing in AI inference, GPU performance, robotics, evaluation, and developer-facing technical work.">
 <meta name="color-scheme" content="light">
-<meta property="og:title" content="Piyush Medikeri — Systems Software Engineer, AI &amp; Robotics">
-<meta property="og:description" content="AI inference, GPU benchmarking, robotics, evaluation, and developer experience — from early autonomous systems to production platforms.">
+<meta property="og:title" content="Piyush Medikeri | Systems Software Engineer, AI &amp; Robotics">
+<meta property="og:description" content="AI inference, GPU benchmarking, robotics, evaluation, and developer experience, from early autonomous systems to production platforms.">
 <meta property="og:type" content="website">
 <style>
   :root{
@@ -83,17 +83,28 @@
   .sec-head .line{flex:1;height:1px;background:linear-gradient(90deg,var(--border2),transparent)}
   @media(max-width:520px){.sec-head h2{white-space:normal;font-size:1.9rem}.sec-head .line{display:none}}
 
-  .about-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:46px;align-items:start}
-  @media(max-width:820px){.about-grid{grid-template-columns:1fr;gap:28px}}
-  .about p{color:var(--muted);font-size:1.06rem;margin-bottom:17px}
-  .about p b{color:var(--text);font-weight:650}
-  .quickfacts{border:1px solid var(--border);border-radius:16px;background:rgba(255,253,249,.7);padding:22px;font-size:13.5px}
-  .quickfacts .row{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid var(--border)}
+  .about-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(270px,.8fr);gap:54px;align-items:start}
+  @media(max-width:820px){.about-grid{grid-template-columns:1fr;gap:30px}}
+  .about-lead{font-family:var(--serif);color:var(--text);font-size:clamp(1.35rem,2.5vw,1.7rem);line-height:1.42;letter-spacing:-.025em;margin-bottom:28px;max-width:720px}
+  .about-themes{border-top:1px solid var(--border)}
+  .about-theme{display:grid;grid-template-columns:14px 1fr;gap:15px;padding:19px 0;border-bottom:1px solid var(--border)}
+  .theme-mark{width:9px;height:9px;border-radius:50%;background:var(--warm);margin-top:8px}
+  .about-theme:nth-child(2) .theme-mark{background:var(--accent)}
+  .about-theme:nth-child(3) .theme-mark{background:#8d7a65}
+  .about-theme h3{font-size:1rem;letter-spacing:-.01em;margin-bottom:4px}
+  .about-theme p{color:var(--muted);font-size:.96rem;line-height:1.6}
+  .quickfacts{border-radius:18px;background:#20373d;color:#fff;padding:26px;box-shadow:0 18px 42px rgba(32,55,61,.14)}
+  .fact-label{font-family:var(--serif);font-size:1.35rem;letter-spacing:-.02em;margin-bottom:12px}
+  .quickfacts .row{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:13.5px}
   .quickfacts .row:last-child{border-bottom:0}
-  .quickfacts .k{color:var(--dim)}
-  .quickfacts .v{color:var(--text);text-align:right}
+  .quickfacts .k{color:rgba(255,255,255,.56)}
+  .quickfacts .v{color:#fff;text-align:right}
+  .quickfacts .accent{color:#efb495}
+  @media(max-width:520px){.about-theme{grid-template-columns:10px 1fr;gap:12px}.quickfacts{padding:22px}}
 
   .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  #public .cards{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:900px){#public .cards{grid-template-columns:1fr}}
   @media(max-width:720px){.cards{grid-template-columns:1fr}}
   .card{border:1px solid var(--border);border-radius:17px;background:rgba(255,253,249,.86);padding:25px;transition:.22s;position:relative;overflow:hidden}
   .card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 14px 34px rgba(44,49,48,.07)}
@@ -176,7 +187,7 @@
     <div class="role-line reveal">I build and harden systems where <b>AI meets the physical world.</b></div>
     <p class="lede reveal">
       Systems software engineer working across AI inference, GPU performance, and robotics. I build
-      reproducible benchmarks, production-minded tooling, and developer experiences &mdash; from early
+      reproducible benchmarks, production-minded tooling, and developer experiences, from early
       autonomous systems to modern large-model and physical-AI platforms.
     </p>
     <div class="cta reveal">
@@ -201,33 +212,43 @@
     <div class="sec-head reveal"><span class="idx">01</span><h2>About</h2><span class="line"></span></div>
     <div class="about-grid about">
       <div class="reveal">
-        <p>
-          I am a systems software engineer working where <b>hardware, robotics, and large models meet</b>.
-          Across research prototypes and production platforms, I turn ambiguous technical problems into
-          measurable systems, reproducible workflows, and tools that developers can trust. At NVIDIA,
-          that means pushing new AI and robotics platforms until their limits become clear.
+        <p class="about-lead">
+          I build reliable systems where AI software meets physical machines, balancing model
+          behavior, hardware constraints, and the developer experience.
         </p>
-        <p>
-          Day to day that means <b>cross-platform benchmarking</b>, <b>deep functional and quality reviews</b>,
-          performance tuning of LLM/VLM inference, and building <b>agent-driven automation</b> that turns
-          multi-week evaluations into days. I also build <b>demos and reviewer collateral</b> for launches
-          like DGX Spark and Jetson, teach hands-on DLI courses, and represent the stack to reviewers
-          and press.
-        </p>
-        <p>
-          Before the benchmarking and evaluation work, I contributed to NVIDIA's GPU-accelerated
-          robotics stack &mdash; motion planning and ROS 2 manipulation on Jetson. I'm happiest turning
-          messy, ambiguous systems into reproducible, well-documented results.
-        </p>
+        <div class="about-themes">
+          <article class="about-theme">
+            <span class="theme-mark" aria-hidden="true"></span>
+            <div>
+              <h3>Measure and improve</h3>
+              <p>I turn performance questions into reproducible evidence through cross-platform LLM/VLM benchmarks, deep technical reviews, and automation that shortens evaluation cycles.</p>
+            </div>
+          </article>
+          <article class="about-theme">
+            <span class="theme-mark" aria-hidden="true"></span>
+            <div>
+              <h3>Make complex platforms usable</h3>
+              <p>I translate engineering work into demos, reviewer guides, launch material, and hands-on courses that help developers and technical audiences understand what a platform can do.</p>
+            </div>
+          </article>
+          <article class="about-theme">
+            <span class="theme-mark" aria-hidden="true"></span>
+            <div>
+              <h3>Grounded in robotics</h3>
+              <p>My foundation is motion planning, perception, and ROS 2 manipulation on edge hardware, experience that keeps my systems work connected to real machines and real constraints.</p>
+            </div>
+          </article>
+        </div>
       </div>
-      <div class="quickfacts reveal">
-        <div class="row"><span class="k">role</span><span class="v">Sr. Systems SW Engineer</span></div>
-        <div class="row"><span class="k">team</span><span class="v">AI &amp; Robotics · NVIDIA</span></div>
-        <div class="row"><span class="k">based</span><span class="v">Santa Clara, CA</span></div>
-        <div class="row"><span class="k">focus</span><span class="v">Benchmarking · Eval · GPU</span></div>
-        <div class="row"><span class="k">degree</span><span class="v">M.S. Robotics, ASU</span></div>
-        <div class="row"><span class="k">status</span><span class="v accent">open to relevant roles</span></div>
-      </div>
+      <aside class="quickfacts reveal" aria-label="At a glance">
+        <div class="fact-label">At a glance</div>
+        <div class="row"><span class="k">Role</span><span class="v">Sr. Systems SW Engineer</span></div>
+        <div class="row"><span class="k">Currently</span><span class="v">AI &amp; Robotics · NVIDIA</span></div>
+        <div class="row"><span class="k">Based</span><span class="v">Santa Clara, CA</span></div>
+        <div class="row"><span class="k">Focus</span><span class="v">Performance · Eval · GPU</span></div>
+        <div class="row"><span class="k">Education</span><span class="v">M.S. Robotics, ASU</span></div>
+        <div class="row"><span class="k">Status</span><span class="v accent">Open to relevant roles</span></div>
+      </aside>
     </div>
   </div>
 </section>
@@ -239,22 +260,22 @@
       <div class="card reveal">
         <span class="ico">01</span>
         <h3>AI Inference &amp; Benchmarking</h3>
-        <p>Cross-platform LLM/VLM benchmarking across NVIDIA, Apple Silicon, and AMD &mdash; reproducible recipes, CI pipelines, and live dashboards. Serving and quantization tuning on vLLM and TensorRT-LLM.</p>
+        <p>Cross-platform LLM/VLM benchmarking across NVIDIA, Apple Silicon, and AMD, reproducible recipes, CI pipelines, and live dashboards. Serving and quantization tuning on vLLM and TensorRT-LLM.</p>
       </div>
       <div class="card reveal">
         <span class="ico">02</span>
         <h3>Robotics &amp; Simulation</h3>
-        <p>GPU-accelerated robotics on the Isaac stack &mdash; Isaac ROS/Sim/Lab, MoveIt 2, ROS 2 manipulation and perception pipelines validated on Jetson and x86.</p>
+        <p>GPU-accelerated robotics on the Isaac stack, Isaac ROS/Sim/Lab, MoveIt 2, ROS 2 manipulation and perception pipelines validated on Jetson and x86.</p>
       </div>
       <div class="card reveal">
         <span class="ico">03</span>
         <h3>Developer Experience &amp; Evaluation</h3>
-        <p>Agent-driven review harnesses that automate documentation testing, edge-case probing, and structured reporting &mdash; functional and quality reviews that produce prioritized, actionable fixes.</p>
+        <p>Agent-driven review harnesses that automate documentation testing, edge-case probing, and structured reporting, functional and quality reviews that produce prioritized, actionable fixes.</p>
       </div>
       <div class="card reveal">
         <span class="ico">04</span>
         <h3>Demos &amp; Technical Storytelling</h3>
-        <p>Launch demos, reviewer guides, and hands-on DLI courses for DGX Spark and Jetson &mdash; plus talks, presentations, and technical press support that put the platform in developers' hands.</p>
+        <p>Launch demos, reviewer guides, and hands-on DLI courses for DGX Spark and Jetson, plus talks, presentations, and technical press support that put the platform in developers' hands.</p>
       </div>
     </div>
   </div>
@@ -284,7 +305,7 @@
         <p>
           Designed and operated a scheduled research and briefing system on a DGX Spark with a locally
           served Qwen model. Added system services, health checks, watchdogs, deduplication, and an
-          independent delivery safety net after real production failures &mdash; turning an experiment
+          independent delivery safety net after real production failures, turning an experiment
           into an observable, recoverable workflow.
         </p>
         <div class="tags"><span class="tag">llama.cpp</span><span class="tag">Qwen</span><span class="tag">DGX Spark</span><span class="tag">systemd</span><span class="tag">Agent Workflows</span><span class="tag">Reliability</span></div>
@@ -364,11 +385,6 @@
         <h3>VLM-Powered Robot Navigation <span class="arrow">↗</span></h3>
         <p>Built a hackathon demo that interpreted a simulated robot's camera stream with a vision-language model for obstacle awareness, scene summaries, and navigation direction.</p>
       </a>
-      <a class="card card-link reveal" href="https://armadadefence.in/" target="_blank" rel="noopener noreferrer">
-        <span class="ico">SIDE INTEREST</span>
-        <h3>Armada Defence <span class="arrow">↗</span></h3>
-        <p>Publicly listed team member bringing an AI and robotics perspective to work around defence partnerships, aviation, security solutions, indigenization, and MRO in South Asia.</p>
-      </a>
     </div>
   </div>
 </section>
@@ -378,22 +394,22 @@
     <div class="sec-head reveal"><span class="idx">05</span><h2>Experience</h2><span class="line"></span></div>
     <div class="timeline">
       <div class="job reveal">
-        <div class="when">JUN 2023 — PRESENT</div>
+        <div class="when">JUN 2023 to PRESENT</div>
         <h3>Sr. System Software Engineer, AI &amp; Robotics &middot; <span class="co">NVIDIA</span></h3>
         <p>Cross-platform benchmarking, LLM/VLM inference tuning, agent-driven evaluation of the AI &amp; robotics stack, and DGX Spark / Jetson demos, DLI courses, and press enablement.</p>
       </div>
       <div class="job reveal">
-        <div class="when">JUN 2021 — JUN 2023</div>
+        <div class="when">JUN 2021 to JUN 2023</div>
         <h3>System Software Engineer, AI &amp; Robotics &middot; <span class="co">NVIDIA</span></h3>
         <p>GPU-accelerated motion planning (Isaac cuMotion), MoveIt 2 / ROS 2 manipulation demos, and perception pipelines validated on Jetson and x86.</p>
       </div>
       <div class="job reveal">
-        <div class="when">JUN 2020 — AUG 2020</div>
+        <div class="when">JUN 2020 to AUG 2020</div>
         <h3>ROS Developer Intern &middot; <span class="co">MathWorks</span></h3>
         <p>Built a Simulink ROS Toolbox block for multi-sensor time alignment and a throughput benchmarking harness whose tuning guidelines were adopted by the team.</p>
       </div>
       <div class="job reveal">
-        <div class="when">JAN 2019 — JUL 2019</div>
+        <div class="when">JAN 2019 to JUL 2019</div>
         <h3>Robotics Engineering Intern &middot; <span class="co">PLEN Robotics</span></h3>
         <p>Built a ROS package fusing face recognition with order management for a humanoid café robot, and prototyped a vision-based door-unlocking system.</p>
       </div>

@@ -93,6 +93,9 @@
   .proj h3{font-size:1.17rem;letter-spacing:-.015em}
   .proj .kind{font-size:11px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
   .proj p{color:var(--muted);font-size:.96rem;margin-bottom:14px;max-width:820px}
+  .impact{display:grid;grid-template-columns:54px 1fr;gap:12px;border-top:1px solid var(--border);padding:12px 0;margin-top:2px;font-size:.9rem}
+  .impact strong{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--accent)}
+  .impact span{color:var(--text)}
   .tags{display:flex;flex-wrap:wrap;gap:6px}
   .tag{font-size:11px;color:var(--muted);background:var(--surface2);border-radius:4px;padding:4px 8px}
   .subhead{font-size:1.15rem;font-weight:700;color:var(--text);margin:38px 0 15px}
@@ -136,9 +139,9 @@
   <div class="wrap">
     <a class="brand" href="#top"><span class="blip"></span>piyush<span class="accent">.</span>medikeri</a>
     <div class="navlinks" id="navlinks">
-      <a href="#about"><span class="num">01</span>about</a>
-      <a href="#focus"><span class="num">02</span>work</a>
-      <a href="#projects"><span class="num">03</span>projects</a>
+      <a href="#projects"><span class="num">01</span>projects</a>
+      <a href="#about"><span class="num">02</span>about</a>
+      <a href="#focus"><span class="num">03</span>work</a>
       <a href="#public"><span class="num">04</span>public work</a>
       <a href="#experience"><span class="num">05</span>experience</a>
       <a href="#skills"><span class="num">06</span>toolkit</a>
@@ -175,9 +178,65 @@
   </div>
 </header>
 
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="idx">01</span><h2>Featured projects</h2><span class="line"></span></div>
+    <div class="projects">
+      <div class="proj reveal">
+        <div class="proj-top">
+          <h3>Cross-Platform AI Benchmarking</h3>
+          <span class="kind">Performance engineering</span>
+        </div>
+        <p>
+          Built declarative, automated LLM/VLM benchmarks across DGX Spark, Jetson, DGX, Apple Silicon,
+          and AMD systems, with CI and live dashboards for throughput, latency, and memory.
+        </p>
+        <div class="impact"><strong>Impact</strong><span>Replaced one-off benchmark scripts with a shared, repeatable source of truth.</span></div>
+        <div class="tags"><span class="tag">TensorRT-LLM</span><span class="tag">vLLM</span><span class="tag">MLX</span><span class="tag">CI/CD</span><span class="tag">Performance</span><span class="tag">Dashboards</span></div>
+      </div>
+      <div class="proj reveal">
+        <div class="proj-top">
+          <h3>GPU-Accelerated Robotics and Manipulation</h3>
+          <span class="kind">Robotics</span>
+        </div>
+        <p>
+          Contributed benchmarking harnesses, automated tests, and MoveIt 2 / ROS 2 demos for
+          NVIDIA Isaac cuMotion, validated on Jetson Orin and x86.
+        </p>
+        <div class="impact"><strong>Impact</strong><span>Helped validate GPU motion planning across edge and desktop systems and support a published reference workflow.</span></div>
+        <div class="tags"><span class="tag">Isaac ROS</span><span class="tag">ROS 2</span><span class="tag">MoveIt 2</span><span class="tag">cuMotion</span><span class="tag">Jetson</span><span class="tag">C++</span></div>
+      </div>
+      <a class="proj reveal" href="https://github.com/pmedikeri/device-pool" target="_blank" rel="noopener noreferrer">
+        <div class="proj-top">
+          <h3>Self-Service Device Pool <span aria-hidden="true">↗</span></h3>
+          <span class="kind">Full-stack platform</span>
+        </div>
+        <p>
+          Built a platform for teams to discover, reserve, and connect to shared Linux, macOS, and
+          Windows systems. A lightweight agent reports live CPU, memory, and GPU health.
+        </p>
+        <div class="impact"><strong>Impact</strong><span>Turned manual device coordination into a searchable reserve, connect, and release workflow.</span></div>
+        <div class="tags"><span class="tag">Next.js</span><span class="tag">TypeScript</span><span class="tag">PostgreSQL</span><span class="tag">Prisma</span><span class="tag">Docker</span><span class="tag">Playwright</span></div>
+      </a>
+      <div class="proj reveal">
+        <div class="proj-top">
+          <h3>Local AI Briefing System</h3>
+          <span class="kind">Local AI and reliability</span>
+        </div>
+        <p>
+          Built a scheduled research and briefing service around a locally served Qwen model, with
+          system services, health checks, watchdogs, and deduplication.
+        </p>
+        <div class="impact"><strong>Impact</strong><span>Keeps a recurring AI workflow running unattended and recoverable when inference or delivery fails.</span></div>
+        <div class="tags"><span class="tag">llama.cpp</span><span class="tag">Qwen</span><span class="tag">DGX Spark</span><span class="tag">systemd</span><span class="tag">Agent Workflows</span><span class="tag">Reliability</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="about">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="idx">01</span><h2>About</h2><span class="line"></span></div>
+    <div class="sec-head reveal"><span class="idx">02</span><h2>About</h2><span class="line"></span></div>
     <div class="about-grid about">
       <div class="reveal">
         <p class="about-lead">
@@ -222,7 +281,7 @@
 
 <section id="focus">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="idx">02</span><h2>What I work on</h2><span class="line"></span></div>
+    <div class="sec-head reveal"><span class="idx">03</span><h2>What I work on</h2><span class="line"></span></div>
     <div class="cards">
       <div class="card reveal">
         <span class="ico">Performance</span>
@@ -248,61 +307,9 @@
   </div>
 </section>
 
-<section id="projects">
+<section id="earlier">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="idx">03</span><h2>Featured projects</h2><span class="line"></span></div>
-    <div class="projects">
-      <a class="proj reveal" href="https://github.com/pmedikeri/device-pool" target="_blank" rel="noopener noreferrer">
-        <div class="proj-top">
-          <h3>Self-Service Device Pool <span aria-hidden="true">↗</span></h3>
-          <span class="kind">Full-stack platform</span>
-        </div>
-        <p>
-          Built a platform for teams to discover, reserve, and connect to shared Linux, macOS, and
-          Windows systems. Devices enroll with a lightweight heartbeat agent, report live CPU,
-          memory, and GPU health, and expose a clear reserve &rarr; connect &rarr; release workflow.
-        </p>
-        <div class="tags"><span class="tag">Next.js</span><span class="tag">TypeScript</span><span class="tag">PostgreSQL</span><span class="tag">Prisma</span><span class="tag">Docker</span><span class="tag">Playwright</span></div>
-      </a>
-      <div class="proj reveal">
-        <div class="proj-top">
-          <h3>Local AI Briefing System</h3>
-          <span class="kind">Local AI · reliability</span>
-        </div>
-        <p>
-          Built a scheduled research and briefing service around a locally served Qwen model.
-          System services, health checks, watchdogs, and deduplication keep the workflow observable
-          and recoverable when inference or delivery fails.
-        </p>
-        <div class="tags"><span class="tag">llama.cpp</span><span class="tag">Qwen</span><span class="tag">DGX Spark</span><span class="tag">systemd</span><span class="tag">Agent Workflows</span><span class="tag">Reliability</span></div>
-      </div>
-      <div class="proj reveal">
-        <div class="proj-top">
-          <h3>GPU-Accelerated Robotics &amp; Manipulation</h3>
-          <span class="kind">Robotics</span>
-        </div>
-        <p>
-          Contributed to NVIDIA's GPU-accelerated motion-planning library (Isaac cuMotion): benchmarking
-          harnesses, automated test suites, and MoveIt 2 / ROS 2 manipulation demos validated on Jetson
-          Orin and x86, plus a published Isaac Manipulator reference workflow.
-        </p>
-        <div class="tags"><span class="tag">Isaac ROS</span><span class="tag">ROS 2</span><span class="tag">MoveIt 2</span><span class="tag">cuMotion</span><span class="tag">Jetson</span><span class="tag">C++</span></div>
-      </div>
-      <div class="proj reveal">
-        <div class="proj-top">
-          <h3>Cross-Platform AI Benchmarking</h3>
-          <span class="kind">Performance engineering</span>
-        </div>
-        <p>
-          Built reproducible LLM/VLM benchmarking infrastructure spanning DGX Spark, Jetson, DGX,
-          Apple Silicon, and AMD systems. Declarative recipes, automated runs, CI, and live dashboards
-          replaced one-off scripts with a shared source of truth for throughput, latency, and memory.
-        </p>
-        <div class="tags"><span class="tag">TensorRT-LLM</span><span class="tag">vLLM</span><span class="tag">MLX</span><span class="tag">CI/CD</span><span class="tag">Performance</span><span class="tag">Dashboards</span></div>
-      </div>
-    </div>
-
-    <h3 class="subhead reveal">Earlier projects</h3>
+    <div class="sec-head reveal"><span class="idx">04</span><h2>Earlier projects</h2><span class="line"></span></div>
     <div class="cards">
       <div class="card reveal">
         <img class="project-thumb diagram" src="assets/project-rl.webp" alt="V-REP simulation of striker and goalkeeper reinforcement-learning agents." loading="lazy" decoding="async">
@@ -334,7 +341,7 @@
 
 <section id="public">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="idx">04</span><h2>Selected public work</h2><span class="line"></span></div>
+    <div class="sec-head reveal"><span class="idx">05</span><h2>Selected public work</h2><span class="line"></span></div>
     <div class="cards">
       <a class="card card-link reveal" href="https://nvidia-ai-iot.github.io/isaac-sim-jetson-hil-course-doc/" target="_blank" rel="noopener noreferrer">
         <span class="ico">COURSE</span>
@@ -357,7 +364,7 @@
 
 <section id="experience">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="idx">05</span><h2>Experience</h2><span class="line"></span></div>
+    <div class="sec-head reveal"><span class="idx">06</span><h2>Experience</h2><span class="line"></span></div>
     <div class="timeline">
       <div class="job reveal">
         <div class="when">JUN 2023 to PRESENT</div>
@@ -398,7 +405,7 @@
 
 <section id="skills">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="idx">06</span><h2>Toolkit</h2><span class="line"></span></div>
+    <div class="sec-head reveal"><span class="idx">07</span><h2>Toolkit</h2><span class="line"></span></div>
     <div class="skillgrid">
       <div class="skillcol reveal">
         <h4>Languages</h4>

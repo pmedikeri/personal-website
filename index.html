@@ -11,10 +11,10 @@
 <meta property="og:type" content="website">
 <style>
   :root{
-    --bg:#0a0e12; --bg2:#0d1218; --surface:#12181f; --surface2:#161d25;
-    --border:#1e2831; --border2:#28343f;
-    --text:#e6edf3; --muted:#8b98a5; --dim:#5b6672;
-    --accent:#76b900; --accent-dim:#5a8f00; --cyan:#3ad0d8;
+    --bg:#070b16; --bg2:#0b1020; --surface:#101726; --surface2:#151d31;
+    --border:#202c44; --border2:#31415e;
+    --text:#eef3ff; --muted:#9aa9c2; --dim:#687790;
+    --accent:#8b9cff; --accent-dim:#6978e8; --cyan:#48d9c7;
     --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Code",Menlo,Consolas,monospace;
     --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
     --maxw:1080px;
@@ -30,8 +30,8 @@
   body::before{
     content:""; position:fixed; inset:0; z-index:-2;
     background:
-      radial-gradient(650px 400px at 78% -8%, rgba(118,185,0,.10), transparent 70%),
-      radial-gradient(600px 500px at -5% 30%, rgba(58,208,216,.06), transparent 70%);
+      radial-gradient(650px 400px at 78% -8%, rgba(139,156,255,.13), transparent 70%),
+      radial-gradient(600px 500px at -5% 30%, rgba(72,217,199,.07), transparent 70%);
     pointer-events:none;
   }
   body::after{
@@ -69,7 +69,12 @@
   @media(max-width:880px){.navlinks{display:none}.menu-btn{display:block}}
 
   /* ---------- HERO ---------- */
-  header{padding:clamp(70px,13vh,130px) 0 clamp(50px,8vh,90px)}
+  header{padding:clamp(28px,5vh,54px) 0 clamp(50px,8vh,90px)}
+  .hero-panel{position:relative;isolation:isolate;overflow:hidden;min-height:590px;border:1px solid var(--border2);border-radius:24px;padding:clamp(40px,7vw,78px);display:flex;align-items:center;box-shadow:0 28px 80px rgba(0,0,0,.38)}
+  .hero-panel::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(7,11,22,.98) 0%,rgba(7,11,22,.92) 37%,rgba(7,11,22,.52) 62%,rgba(7,11,22,.12) 100%),linear-gradient(0deg,rgba(7,11,22,.62),transparent 45%)}
+  .hero-art{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;object-position:center}
+  .hero-copy{position:relative;max-width:650px}
+  @media(max-width:700px){.hero-panel{min-height:610px;padding:34px 26px;align-items:flex-end}.hero-panel::after{background:linear-gradient(0deg,rgba(7,11,22,.99) 0%,rgba(7,11,22,.9) 56%,rgba(7,11,22,.28) 100%)}.hero-art{object-position:67% center}}
   .eyebrow{font-family:var(--mono);color:var(--accent);font-size:14px;margin-bottom:22px;display:flex;align-items:center;gap:8px}
   .eyebrow .caret{color:var(--accent)}
   h1{font-size:clamp(2.6rem,8vw,5rem);line-height:1.02;font-weight:800;letter-spacing:-.03em;margin-bottom:14px}
@@ -80,8 +85,8 @@
   .cta{display:flex;flex-wrap:wrap;gap:14px}
   .btn{font-family:var(--mono);font-size:14px;padding:12px 20px;border-radius:9px;border:1px solid var(--border2);color:var(--text);transition:.2s;display:inline-flex;align-items:center;gap:9px}
   .btn:hover{border-color:var(--accent);transform:translateY(-2px)}
-  .btn.primary{background:var(--accent);color:#0a0e12;border-color:var(--accent);font-weight:600}
-  .btn.primary:hover{background:#88d100;box-shadow:0 8px 30px rgba(118,185,0,.28)}
+  .btn.primary{background:var(--accent);color:#070b16;border-color:var(--accent);font-weight:600}
+  .btn.primary:hover{background:#aab4ff;box-shadow:0 8px 30px rgba(139,156,255,.28)}
   .btn svg{width:16px;height:16px}
 
   /* ---------- SECTIONS ---------- */
@@ -181,14 +186,16 @@
 
 <header id="top">
   <div class="wrap">
-    <div class="eyebrow reveal"><span class="caret">&gt;</span> systems software engineer &mdash; ai &amp; robotics</div>
+    <div class="hero-panel">
+      <img class="hero-art" src="assets/hero-systems.webp" alt="Abstract robotic arm connecting a network of AI compute systems." width="1774" height="887" fetchpriority="high">
+      <div class="hero-copy">
+    <div class="eyebrow reveal"><span class="caret">&gt;</span> ai systems &middot; robotics &middot; performance</div>
     <h1 class="reveal">Piyush <span class="grad">Medikeri</span></h1>
-    <div class="role-line reveal">I benchmark, break, and <b>harden the GPU stack</b> that powers physical AI.</div>
+    <div class="role-line reveal">I build and harden systems where <b>AI meets the physical world.</b></div>
     <p class="lede reveal">
-      Senior Systems Software Engineer at NVIDIA. I evaluate and stress-test the GPU-accelerated
-      robotics and inference stack &mdash; Isaac ROS/Sim, TensorRT-LLM, vLLM, CUDA &mdash; across Jetson, DGX,
-      and DGX Spark, then turn deep technical evaluation into reproducible benchmarks, demos, and
-      developer collateral that ship.
+      Systems software engineer working across AI inference, GPU performance, and robotics. I build
+      reproducible benchmarks, production-minded tooling, and developer experiences &mdash; from early
+      autonomous systems to modern large-model and physical-AI platforms.
     </p>
     <div class="cta reveal">
       <a class="btn primary" href="#projects">View work</a>
@@ -202,6 +209,8 @@
       </a>
       <a class="btn" href="mailto:piyushmedikeri1997@gmail.com">Email</a>
     </div>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -211,10 +220,10 @@
     <div class="about-grid about">
       <div class="reveal">
         <p>
-          I'm a systems software engineer on NVIDIA's AI &amp; robotics team. My job sits where
-          <b>hardware, robotics, and large models meet</b> &mdash; I take NVIDIA's newest platforms and SDKs,
-          push them until they break, and figure out how to make them faster, clearer, and easier
-          for developers to build on.
+          I am a systems software engineer working where <b>hardware, robotics, and large models meet</b>.
+          Across research prototypes and production platforms, I turn ambiguous technical problems into
+          measurable systems, reproducible workflows, and tools that developers can trust. At NVIDIA,
+          that means pushing new AI and robotics platforms until their limits become clear.
         </p>
         <p>
           Day to day that means <b>cross-platform benchmarking</b>, <b>deep functional and quality reviews</b>,
@@ -461,7 +470,7 @@
 <footer>
   <div class="wrap">
     <span>&copy; <span id="yr">2026</span> Piyush Medikeri</span>
-    <span>Santa Clara, CA &middot; built &amp; deployed from a DGX Spark</span>
+    <span>Santa Clara, CA &middot; designed &amp; built by Piyush</span>
   </div>
 </footer>
 

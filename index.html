@@ -1,64 +1,505 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Piyush Medikeri</title>
-  <meta name="description" content="Website under construction.">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #faf9f5;
-      color: #1a1a1a;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      line-height: 1.6;
-    }
-    main {
-      max-width: 640px;
-      text-align: center;
-    }
-    h1 {
-      font-size: clamp(2.5rem, 6vw, 3.75rem);
-      font-weight: 600;
-      margin-bottom: 1.25rem;
-      letter-spacing: -0.02em;
-    }
-    p {
-      color: #555;
-      font-size: 1.125rem;
-      margin-bottom: 2rem;
-    }
-    .dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      background: #d97706;
-      border-radius: 50%;
-      margin-right: 8px;
-      vertical-align: middle;
-      animation: pulse 2s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.35; }
-    }
-    .meta {
-      font-size: 0.875rem;
-      color: #999;
-      margin-top: 3rem;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Piyush Medikeri — Systems Software Engineer, AI &amp; Robotics</title>
+<meta name="description" content="Piyush Medikeri is a systems software engineer specializing in AI inference, GPU performance, robotics, evaluation, and developer-facing technical work.">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="Piyush Medikeri — Systems Software Engineer, AI &amp; Robotics">
+<meta property="og:description" content="AI inference, GPU benchmarking, robotics, evaluation, and developer experience — from early autonomous systems to production platforms.">
+<meta property="og:type" content="website">
+<style>
+  :root{
+    --bg:#0a0e12; --bg2:#0d1218; --surface:#12181f; --surface2:#161d25;
+    --border:#1e2831; --border2:#28343f;
+    --text:#e6edf3; --muted:#8b98a5; --dim:#5b6672;
+    --accent:#76b900; --accent-dim:#5a8f00; --cyan:#3ad0d8;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Code",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    --maxw:1080px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg); color:var(--text); font-family:var(--sans);
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  /* subtle grid + glow background */
+  body::before{
+    content:""; position:fixed; inset:0; z-index:-2;
+    background:
+      radial-gradient(650px 400px at 78% -8%, rgba(118,185,0,.10), transparent 70%),
+      radial-gradient(600px 500px at -5% 30%, rgba(58,208,216,.06), transparent 70%);
+    pointer-events:none;
+  }
+  body::after{
+    content:""; position:fixed; inset:0; z-index:-1; opacity:.35;
+    background-image:
+      linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:44px 44px;
+    -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+            mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+    pointer-events:none;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(20px,5vw,40px)}
+  .mono{font-family:var(--mono)}
+  .accent{color:var(--accent)}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:blur(12px);
+    background:rgba(10,14,18,.72);
+    border-bottom:1px solid var(--border);
+  }
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand{font-family:var(--mono);font-weight:600;font-size:15px;letter-spacing:.3px;display:flex;align-items:center;gap:9px}
+  .brand .blip{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .navlinks{display:flex;gap:26px;font-family:var(--mono);font-size:13px}
+  .navlinks a{color:var(--muted);transition:color .2s;position:relative}
+  .navlinks a:hover,.navlinks a.active{color:var(--text)}
+  .navlinks a.active::after{content:"";position:absolute;left:0;right:0;bottom:-20px;height:2px;background:var(--accent)}
+  .navlinks .num{color:var(--accent);margin-right:5px;font-size:11px}
+  .menu-btn{display:none;background:none;border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:13px;padding:6px 12px;border-radius:7px;cursor:pointer}
+  @media(max-width:880px){.navlinks{display:none}.menu-btn{display:block}}
+
+  /* ---------- HERO ---------- */
+  header{padding:clamp(70px,13vh,130px) 0 clamp(50px,8vh,90px)}
+  .eyebrow{font-family:var(--mono);color:var(--accent);font-size:14px;margin-bottom:22px;display:flex;align-items:center;gap:8px}
+  .eyebrow .caret{color:var(--accent)}
+  h1{font-size:clamp(2.6rem,8vw,5rem);line-height:1.02;font-weight:800;letter-spacing:-.03em;margin-bottom:14px}
+  h1 .grad{background:linear-gradient(100deg,var(--accent),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .role-line{font-size:clamp(1.15rem,3.4vw,1.8rem);color:var(--muted);font-weight:500;letter-spacing:-.01em;margin-bottom:26px}
+  .role-line b{color:var(--text);font-weight:600}
+  .lede{max-width:640px;color:var(--muted);font-size:1.06rem;margin-bottom:34px}
+  .cta{display:flex;flex-wrap:wrap;gap:14px}
+  .btn{font-family:var(--mono);font-size:14px;padding:12px 20px;border-radius:9px;border:1px solid var(--border2);color:var(--text);transition:.2s;display:inline-flex;align-items:center;gap:9px}
+  .btn:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .btn.primary{background:var(--accent);color:#0a0e12;border-color:var(--accent);font-weight:600}
+  .btn.primary:hover{background:#88d100;box-shadow:0 8px 30px rgba(118,185,0,.28)}
+  .btn svg{width:16px;height:16px}
+
+  /* ---------- SECTIONS ---------- */
+  section{padding:clamp(56px,9vh,90px) 0;scroll-margin-top:70px}
+  .sec-head{display:flex;align-items:center;gap:16px;margin-bottom:38px}
+  .sec-head .idx{font-family:var(--mono);color:var(--accent);font-size:15px}
+  .sec-head h2{font-size:clamp(1.5rem,4vw,2.1rem);font-weight:700;letter-spacing:-.02em;white-space:nowrap}
+  .sec-head .line{flex:1;height:1px;background:linear-gradient(90deg,var(--border2),transparent)}
+  @media(max-width:520px){.sec-head{gap:10px}.sec-head h2{white-space:normal;font-size:1.35rem}.sec-head .line{display:none}}
+
+  .about-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:44px;align-items:start}
+  @media(max-width:820px){.about-grid{grid-template-columns:1fr;gap:28px}}
+  .about p{color:var(--muted);font-size:1.06rem;margin-bottom:16px}
+  .about p b{color:var(--text);font-weight:600}
+  .quickfacts{border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:22px;font-family:var(--mono);font-size:13.5px}
+  .quickfacts .row{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px dashed var(--border2)}
+  .quickfacts .row:last-child{border-bottom:0}
+  .quickfacts .k{color:var(--dim)}
+  .quickfacts .v{color:var(--text);text-align:right}
+
+  /* focus cards */
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  @media(max-width:720px){.cards{grid-template-columns:1fr}}
+  .card{border:1px solid var(--border);border-radius:13px;background:linear-gradient(180deg,var(--surface),var(--bg2));padding:24px;transition:.25s;position:relative;overflow:hidden}
+  .card:hover{border-color:var(--border2);transform:translateY(-3px)}
+  .card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent);opacity:0;transition:.25s}
+  .card:hover::before{opacity:1}
+  .card .ico{font-family:var(--mono);font-size:12px;color:var(--accent);border:1px solid var(--border2);border-radius:6px;padding:4px 8px;display:inline-block;margin-bottom:14px}
+  .card h3{font-size:1.12rem;margin-bottom:8px;letter-spacing:-.01em}
+  .card p{color:var(--muted);font-size:.96rem}
+
+  /* projects */
+  .projects{display:grid;gap:18px}
+  .proj{border:1px solid var(--border);border-radius:14px;background:var(--surface);padding:26px 28px;transition:.25s}
+  .proj:hover{border-color:var(--accent);box-shadow:0 10px 40px rgba(0,0,0,.35)}
+  .proj-top{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:10px;flex-wrap:wrap}
+  .proj h3{font-size:1.28rem;letter-spacing:-.02em}
+  .proj .kind{font-family:var(--mono);font-size:12px;color:var(--accent)}
+  .proj p{color:var(--muted);margin-bottom:16px;max-width:820px}
+  .tags{display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:var(--mono);font-size:11.5px;color:var(--muted);border:1px solid var(--border2);border-radius:20px;padding:4px 11px}
+  .subhead{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.5px;margin:38px 0 16px}
+  .card-link{display:block}
+  .card-link .arrow{color:var(--accent);font-family:var(--mono);font-size:12px;margin-left:5px}
+
+  /* experience timeline */
+  .timeline{position:relative;padding-left:28px}
+  .timeline::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--border2)}
+  .job{position:relative;padding-bottom:30px}
+  .job:last-child{padding-bottom:0}
+  .job::before{content:"";position:absolute;left:-27px;top:6px;width:11px;height:11px;border-radius:50%;background:var(--bg);border:2px solid var(--accent)}
+  .job .when{font-family:var(--mono);font-size:12.5px;color:var(--dim);margin-bottom:3px}
+  .job h3{font-size:1.08rem}
+  .job .co{color:var(--accent);font-weight:600}
+  .job p{color:var(--muted);font-size:.97rem;margin-top:5px;max-width:760px}
+
+  /* skills */
+  .skillgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  @media(max-width:720px){.skillgrid{grid-template-columns:1fr}}
+  .skillcol h4{font-family:var(--mono);font-size:13px;color:var(--accent);margin-bottom:12px;letter-spacing:.5px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-family:var(--mono);font-size:12.5px;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 11px;transition:.2s}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* contact */
+  .contact-box{border:1px solid var(--border);border-radius:16px;background:linear-gradient(180deg,var(--surface),var(--bg2));padding:clamp(34px,6vw,56px);text-align:center}
+  .contact-box h2{font-size:clamp(1.7rem,5vw,2.6rem);letter-spacing:-.02em;margin-bottom:12px}
+  .contact-box p{color:var(--muted);max-width:520px;margin:0 auto 28px}
+  .contact-links{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
+
+  footer{border-top:1px solid var(--border);padding:26px 0;color:var(--dim);font-family:var(--mono);font-size:12.5px}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+  /* reveal on scroll — only hidden when JS is active (progressive enhancement) */
+  html.js .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+  html.js .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){html.js .reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+</style>
 </head>
 <body>
-  <main>
-    <h1>Piyush Medikeri</h1>
-    <p><span class="dot"></span>Website under construction.</p>
-    <div class="meta">piyushmedikeri.com</div>
-  </main>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="blip"></span>piyush<span class="accent">.</span>medikeri</a>
+    <div class="navlinks" id="navlinks">
+      <a href="#about"><span class="num">01</span>about</a>
+      <a href="#focus"><span class="num">02</span>work</a>
+      <a href="#projects"><span class="num">03</span>projects</a>
+      <a href="#public"><span class="num">04</span>public work</a>
+      <a href="#experience"><span class="num">05</span>experience</a>
+      <a href="#skills"><span class="num">06</span>toolkit</a>
+      <a href="#contact"><span class="num">07</span>contact</a>
+    </div>
+    <button class="menu-btn" id="menuBtn">menu</button>
+  </div>
+</nav>
+
+<header id="top">
+  <div class="wrap">
+    <div class="eyebrow reveal"><span class="caret">&gt;</span> systems software engineer &mdash; ai &amp; robotics</div>
+    <h1 class="reveal">Piyush <span class="grad">Medikeri</span></h1>
+    <div class="role-line reveal">I benchmark, break, and <b>harden the GPU stack</b> that powers physical AI.</div>
+    <p class="lede reveal">
+      Senior Systems Software Engineer at NVIDIA. I evaluate and stress-test the GPU-accelerated
+      robotics and inference stack &mdash; Isaac ROS/Sim, TensorRT-LLM, vLLM, CUDA &mdash; across Jetson, DGX,
+      and DGX Spark, then turn deep technical evaluation into reproducible benchmarks, demos, and
+      developer collateral that ship.
+    </p>
+    <div class="cta reveal">
+      <a class="btn primary" href="#projects">View work</a>
+      <a class="btn" href="https://github.com/pmedikeri" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.57.1.78-.25.78-.55v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.73 1.27 3.4.97.1-.75.4-1.27.73-1.56-2.56-.29-5.26-1.28-5.26-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.4-5.28 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.66.79.55A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>
+        GitHub
+      </a>
+      <a class="btn" href="https://linkedin.com/in/piyush-rajesh-medikeri" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.44-2.13 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0Z"/></svg>
+        LinkedIn
+      </a>
+      <a class="btn" href="mailto:piyushmedikeri1997@gmail.com">Email</a>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="idx">01</span><h2>About</h2><span class="line"></span></div>
+    <div class="about-grid about">
+      <div class="reveal">
+        <p>
+          I'm a systems software engineer on NVIDIA's AI &amp; robotics team. My job sits where
+          <b>hardware, robotics, and large models meet</b> &mdash; I take NVIDIA's newest platforms and SDKs,
+          push them until they break, and figure out how to make them faster, clearer, and easier
+          for developers to build on.
+        </p>
+        <p>
+          Day to day that means <b>cross-platform benchmarking</b>, <b>deep functional and quality reviews</b>,
+          performance tuning of LLM/VLM inference, and building <b>agent-driven automation</b> that turns
+          multi-week evaluations into days. I also build <b>demos and reviewer collateral</b> for launches
+          like DGX Spark and Jetson, teach hands-on DLI courses, and represent the stack to reviewers
+          and press.
+        </p>
+        <p>
+          Before the benchmarking and evaluation work, I contributed to NVIDIA's GPU-accelerated
+          robotics stack &mdash; motion planning and ROS 2 manipulation on Jetson. I'm happiest turning
+          messy, ambiguous systems into reproducible, well-documented results.
+        </p>
+      </div>
+      <div class="quickfacts reveal">
+        <div class="row"><span class="k">role</span><span class="v">Sr. Systems SW Engineer</span></div>
+        <div class="row"><span class="k">team</span><span class="v">AI &amp; Robotics · NVIDIA</span></div>
+        <div class="row"><span class="k">based</span><span class="v">Santa Clara, CA</span></div>
+        <div class="row"><span class="k">focus</span><span class="v">Benchmarking · Eval · GPU</span></div>
+        <div class="row"><span class="k">degree</span><span class="v">M.S. Robotics, ASU</span></div>
+        <div class="row"><span class="k">status</span><span class="v accent">open to relevant roles</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="focus">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="idx">02</span><h2>What I work on</h2><span class="line"></span></div>
+    <div class="cards">
+      <div class="card reveal">
+        <span class="ico">01</span>
+        <h3>AI Inference &amp; Benchmarking</h3>
+        <p>Cross-platform LLM/VLM benchmarking across NVIDIA, Apple Silicon, and AMD &mdash; reproducible recipes, CI pipelines, and live dashboards. Serving and quantization tuning on vLLM and TensorRT-LLM.</p>
+      </div>
+      <div class="card reveal">
+        <span class="ico">02</span>
+        <h3>Robotics &amp; Simulation</h3>
+        <p>GPU-accelerated robotics on the Isaac stack &mdash; Isaac ROS/Sim/Lab, MoveIt 2, ROS 2 manipulation and perception pipelines validated on Jetson and x86.</p>
+      </div>
+      <div class="card reveal">
+        <span class="ico">03</span>
+        <h3>Developer Experience &amp; Evaluation</h3>
+        <p>Agent-driven review harnesses that automate documentation testing, edge-case probing, and structured reporting &mdash; functional and quality reviews that produce prioritized, actionable fixes.</p>
+      </div>
+      <div class="card reveal">
+        <span class="ico">04</span>
+        <h3>Demos &amp; Technical Storytelling</h3>
+        <p>Launch demos, reviewer guides, and hands-on DLI courses for DGX Spark and Jetson &mdash; plus talks, presentations, and technical press support that put the platform in developers' hands.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="idx">03</span><h2>Featured projects</h2><span class="line"></span></div>
+    <div class="projects">
+      <a class="proj reveal" href="https://github.com/pmedikeri/device-pool" target="_blank" rel="noopener noreferrer">
+        <div class="proj-top">
+          <h3>Self-Service Device Pool <span aria-hidden="true">↗</span></h3>
+          <span class="kind">// full-stack platform</span>
+        </div>
+        <p>
+          Built a platform for teams to discover, reserve, and connect to shared Linux, macOS, and
+          Windows systems. Devices enroll with a lightweight heartbeat agent, report live CPU,
+          memory, and GPU health, and expose a clear reserve &rarr; connect &rarr; release workflow.
+        </p>
+        <div class="tags"><span class="tag">Next.js</span><span class="tag">TypeScript</span><span class="tag">PostgreSQL</span><span class="tag">Prisma</span><span class="tag">Docker</span><span class="tag">Playwright</span></div>
+      </a>
+      <div class="proj reveal">
+        <div class="proj-top">
+          <h3>Production-Minded Local Agent Stack</h3>
+          <span class="kind">// local ai · reliability</span>
+        </div>
+        <p>
+          Designed and operated a scheduled research and briefing system on a DGX Spark with a locally
+          served Qwen model. Added system services, health checks, watchdogs, deduplication, and an
+          independent delivery safety net after real production failures &mdash; turning an experiment
+          into an observable, recoverable workflow.
+        </p>
+        <div class="tags"><span class="tag">llama.cpp</span><span class="tag">Qwen</span><span class="tag">DGX Spark</span><span class="tag">systemd</span><span class="tag">Agent Workflows</span><span class="tag">Reliability</span></div>
+      </div>
+      <div class="proj reveal">
+        <div class="proj-top">
+          <h3>GPU-Accelerated Robotics &amp; Manipulation</h3>
+          <span class="kind">// robotics</span>
+        </div>
+        <p>
+          Contributed to NVIDIA's GPU-accelerated motion-planning library (Isaac cuMotion): benchmarking
+          harnesses, automated test suites, and MoveIt 2 / ROS 2 manipulation demos validated on Jetson
+          Orin and x86, plus a published Isaac Manipulator reference workflow.
+        </p>
+        <div class="tags"><span class="tag">Isaac ROS</span><span class="tag">ROS 2</span><span class="tag">MoveIt 2</span><span class="tag">cuMotion</span><span class="tag">Jetson</span><span class="tag">C++</span></div>
+      </div>
+      <div class="proj reveal">
+        <div class="proj-top">
+          <h3>Cross-Platform AI Benchmarking</h3>
+          <span class="kind">// performance engineering</span>
+        </div>
+        <p>
+          Built reproducible LLM/VLM benchmarking infrastructure spanning DGX Spark, Jetson, DGX,
+          Apple Silicon, and AMD systems. Declarative recipes, automated runs, CI, and live dashboards
+          replaced one-off scripts with a shared source of truth for throughput, latency, and memory.
+        </p>
+        <div class="tags"><span class="tag">TensorRT-LLM</span><span class="tag">vLLM</span><span class="tag">MLX</span><span class="tag">CI/CD</span><span class="tag">Performance</span><span class="tag">Dashboards</span></div>
+      </div>
+    </div>
+
+    <h3 class="subhead reveal">// earlier builds</h3>
+    <div class="cards">
+      <div class="card reveal">
+        <span class="ico">RL</span>
+        <h3>Multi-Agent Penalty Kick</h3>
+        <p>Trained striker and goalkeeper agents together with Q-learning in V-REP, exploring competing policies, discrete action spaces, and reward design.</p>
+      </div>
+      <div class="card reveal">
+        <span class="ico">PLAN</span>
+        <h3>Hierarchical Package Delivery</h3>
+        <p>Decomposed vehicle routing into package clustering and delivery routing, comparing two solver pipelines implemented with ROS and simulated in Gazebo.</p>
+      </div>
+      <div class="card reveal">
+        <span class="ico">CV</span>
+        <h3>Autonomous Harvesting Robot</h3>
+        <p>Built an E-Yantra robot that detected requested fruit on a Raspberry Pi, plucked it with a gripper, and delivered it to assigned arena coordinates.</p>
+      </div>
+      <div class="card reveal">
+        <span class="ico">HW</span>
+        <h3>Staircase-Climbing Wheelchair</h3>
+        <p>Built a gyro-stabilized, Arduino-controlled prototype with a robotic arm in 24 hours; placed first among 30 national teams and later earned IEEE Best Hackathon Project.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="public">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="idx">04</span><h2>Public work &amp; interests</h2><span class="line"></span></div>
+    <div class="cards">
+      <a class="card card-link reveal" href="https://nvidia-ai-iot.github.io/isaac-sim-jetson-hil-course-doc/" target="_blank" rel="noopener noreferrer">
+        <span class="ico">COURSE</span>
+        <h3>Isaac Sim + Jetson HIL <span class="arrow">↗</span></h3>
+        <p>Co-instructed a hands-on robotics course spanning Isaac Sim, Isaac ROS, and hardware-in-the-loop workflows, then helped publish the course materials openly.</p>
+      </a>
+      <a class="card card-link reveal" href="https://www.nvidia.com/gtc/session-catalog/sessions/gtc26-dlit82308/" target="_blank" rel="noopener noreferrer">
+        <span class="ico">GTC 2026</span>
+        <h3>Hands-On DGX Spark Lab <span class="arrow">↗</span></h3>
+        <p>Lab instructor for a practical journey through local AI onboarding, inference engines, and agent workflows on a personal AI supercomputer.</p>
+      </a>
+      <a class="card card-link reveal" href="https://www.linkedin.com/posts/nvidiarobotics_build-visual-ai-agents-with-generative-ai-activity-7233905291061293057-0EAy" target="_blank" rel="noopener noreferrer">
+        <span class="ico">DEMO</span>
+        <h3>VLM-Powered Robot Navigation <span class="arrow">↗</span></h3>
+        <p>Built a hackathon demo that interpreted a simulated robot's camera stream with a vision-language model for obstacle awareness, scene summaries, and navigation direction.</p>
+      </a>
+      <a class="card card-link reveal" href="https://armadadefence.in/" target="_blank" rel="noopener noreferrer">
+        <span class="ico">SIDE INTEREST</span>
+        <h3>Armada Defence <span class="arrow">↗</span></h3>
+        <p>Publicly listed team member bringing an AI and robotics perspective to work around defence partnerships, aviation, security solutions, indigenization, and MRO in South Asia.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="idx">05</span><h2>Experience</h2><span class="line"></span></div>
+    <div class="timeline">
+      <div class="job reveal">
+        <div class="when">JUN 2023 — PRESENT</div>
+        <h3>Sr. System Software Engineer, AI &amp; Robotics &middot; <span class="co">NVIDIA</span></h3>
+        <p>Cross-platform benchmarking, LLM/VLM inference tuning, agent-driven evaluation of the AI &amp; robotics stack, and DGX Spark / Jetson demos, DLI courses, and press enablement.</p>
+      </div>
+      <div class="job reveal">
+        <div class="when">JUN 2021 — JUN 2023</div>
+        <h3>System Software Engineer, AI &amp; Robotics &middot; <span class="co">NVIDIA</span></h3>
+        <p>GPU-accelerated motion planning (Isaac cuMotion), MoveIt 2 / ROS 2 manipulation demos, and perception pipelines validated on Jetson and x86.</p>
+      </div>
+      <div class="job reveal">
+        <div class="when">JUN 2020 — AUG 2020</div>
+        <h3>ROS Developer Intern &middot; <span class="co">MathWorks</span></h3>
+        <p>Built a Simulink ROS Toolbox block for multi-sensor time alignment and a throughput benchmarking harness whose tuning guidelines were adopted by the team.</p>
+      </div>
+      <div class="job reveal">
+        <div class="when">JAN 2019 — JUL 2019</div>
+        <h3>Robotics Engineering Intern &middot; <span class="co">PLEN Robotics</span></h3>
+        <p>Built a ROS package fusing face recognition with order management for a humanoid café robot, and prototyped a vision-based door-unlocking system.</p>
+      </div>
+    </div>
+    <h3 class="subhead reveal">// education</h3>
+    <div class="cards">
+      <div class="card reveal">
+        <span class="ico">M.S. · 2021</span>
+        <h3>Arizona State University</h3>
+        <p>Robotics and Autonomous Systems (Artificial Intelligence), 3.9 / 4.0.</p>
+      </div>
+      <div class="card reveal">
+        <span class="ico">B.E. · 2019</span>
+        <h3>R.V. College of Engineering</h3>
+        <p>Electronics and Communication Engineering, Bengaluru, India.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="idx">06</span><h2>Toolkit</h2><span class="line"></span></div>
+    <div class="skillgrid">
+      <div class="skillcol reveal">
+        <h4>// languages</h4>
+        <div class="chips"><span class="chip">Python</span><span class="chip">C++</span><span class="chip">C</span><span class="chip">MATLAB</span><span class="chip">SQL</span></div>
+      </div>
+      <div class="skillcol reveal">
+        <h4>// ai / ml</h4>
+        <div class="chips"><span class="chip">PyTorch</span><span class="chip">Transformers</span><span class="chip">LoRA/QLoRA</span><span class="chip">TensorRT-LLM</span><span class="chip">vLLM</span><span class="chip">NeMo</span><span class="chip">Quantization</span><span class="chip">RAG</span><span class="chip">Agents</span></div>
+      </div>
+      <div class="skillcol reveal">
+        <h4>// robotics</h4>
+        <div class="chips"><span class="chip">ROS 2</span><span class="chip">Isaac ROS</span><span class="chip">Isaac Sim</span><span class="chip">Isaac Lab</span><span class="chip">MoveIt 2</span><span class="chip">Omniverse</span><span class="chip">sim-to-real</span><span class="chip">URDF/USD</span></div>
+      </div>
+      <div class="skillcol reveal">
+        <h4>// systems / gpu</h4>
+        <div class="chips"><span class="chip">CUDA</span><span class="chip">TensorRT</span><span class="chip">Docker</span><span class="chip">NGC</span><span class="chip">CI/CD</span><span class="chip">Jetson</span><span class="chip">DGX / Spark</span><span class="chip">aarch64</span><span class="chip">Linux</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-box reveal">
+      <div class="eyebrow" style="justify-content:center"><span class="caret">&gt;</span> let's talk</div>
+      <h2>Building something at the edge of AI &amp; robotics?</h2>
+      <p>I'm always up for a conversation about GPU systems, physical AI, benchmarking, or where robotics is headed.</p>
+      <div class="contact-links">
+        <a class="btn primary" href="mailto:piyushmedikeri1997@gmail.com">piyushmedikeri1997@gmail.com</a>
+        <a class="btn" href="https://linkedin.com/in/piyush-rajesh-medikeri" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="https://github.com/pmedikeri" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; <span id="yr">2026</span> Piyush Medikeri</span>
+    <span>Santa Clara, CA &middot; built &amp; deployed from a DGX Spark</span>
+  </div>
+</footer>
+
+<script>
+  // active nav on scroll
+  const links=[...document.querySelectorAll('.navlinks a')];
+  const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+  const spy=new IntersectionObserver((es)=>{
+    es.forEach(e=>{if(e.isIntersecting){const id='#'+e.target.id;links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')===id));}});
+  },{rootMargin:'-45% 0px -50% 0px'});
+  secs.forEach(s=>s&&spy.observe(s));
+
+  // reveal on scroll (progressive enhancement)
+  const revEls=[...document.querySelectorAll('.reveal')];
+  const show=el=>el.classList.add('in');
+  if('IntersectionObserver' in window){
+    const rev=new IntersectionObserver((es)=>{
+      es.forEach(e=>{if(e.isIntersecting){show(e.target);rev.unobserve(e.target);}});
+    },{rootMargin:'0px 0px -8% 0px'});
+    revEls.forEach((el,i)=>{el.style.transitionDelay=(Math.min(i%6,5)*40)+'ms';rev.observe(el);});
+  } else {
+    revEls.forEach(show);
+  }
+  // safety net: guarantee anything in view is shown once loaded (covers headless / edge cases)
+  const revealInView=()=>revEls.forEach(el=>{if(el.getBoundingClientRect().top < innerHeight+40) show(el);});
+  addEventListener('load',()=>setTimeout(revealInView,100));
+  setTimeout(revealInView,1200);
+
+  // mobile menu (simple toggle)
+  const nl=document.getElementById('navlinks');
+  document.getElementById('menuBtn').addEventListener('click',()=>{
+    const open=nl.style.display==='flex';
+    nl.style.display=open?'':'flex';
+    if(!open){nl.style.position='absolute';nl.style.top='60px';nl.style.right='20px';nl.style.flexDirection='column';nl.style.gap='16px';nl.style.background='var(--bg2)';nl.style.border='1px solid var(--border)';nl.style.padding='16px 22px';nl.style.borderRadius='10px';}
+  });
+  nl.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{if(window.innerWidth<=880)nl.style.display='';}));
+
+  document.getElementById('yr').textContent=new Date().getFullYear();
+</script>
 </body>
 </html>

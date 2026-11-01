@@ -1,0 +1,86 @@
+/* One shared scale for equivalent content across all sections. */
+:root {
+  --type-caption: .75rem;
+  --type-detail: .875rem;
+  --type-body: 1rem;
+  --type-card-title: 1.375rem;
+  --type-lead: 1.5rem;
+  --type-section-title: clamp(2.25rem, 4.3vw, 3.75rem);
+}
+
+@media screen {
+  .hero-intro,
+  .section-heading > p:last-child:not(.eyebrow),
+  .public-section .section-heading > p:last-child:not(.eyebrow),
+  .career-contributions,
+  .skills-list dd.skill-tools,
+  .about-copy > p:not(.large-copy),
+  .public-story-copy > p:not(.eyebrow),
+  .archive-item > p:not(.eyebrow),
+  #project-pool .project-description,
+  .trail-note p:not(.eyebrow),
+  .contact-content > p.contact-intro {
+    font-size: var(--type-body);
+    line-height: 1.8;
+  }
+
+  .section-heading h2,
+  .about-heading h2 {
+    font-size: var(--type-section-title);
+    line-height: 1.1;
+    letter-spacing: -.035em;
+  }
+
+  .career-list h4,
+  .career-roles > li + li h4,
+  .work-education h4,
+  .public-story-copy h3,
+  .archive-item h3 {
+    font-size: var(--type-card-title);
+    line-height: 1.4;
+    letter-spacing: -.02em;
+  }
+
+  .about-copy .large-copy {
+    font-size: var(--type-lead);
+    line-height: 1.5;
+  }
+
+  .work-column-heading h3,
+  .skills-list dt,
+  .career-meta .career-company,
+  .contact-email { font-size: var(--type-body); }
+
+  .career-focus,
+  .about-location,
+  .work-education p,
+  .navlinks,
+  .enhanced .navlinks,
+  .menu-toggle,
+  .text-link,
+  .public-section .text-link,
+  .contact-actions,
+  .contact-actions button,
+  .photo-dialog button { font-size: var(--type-detail); }
+
+  .eyebrow,
+  .public-story-copy > .eyebrow,
+  .archive-item .eyebrow,
+  .still figcaption,
+  .public-story .still figcaption,
+  #project-pool .device-pool-caption,
+  .career-meta,
+  .career-location,
+  .career-roles > li > span,
+  .career-tools,
+  .education-year,
+  .tags,
+  .hero-caption,
+  .site-footer,
+  .photo-dialog figcaption,
+  .photo-dialog-footer,
+  #copy-status {
+    font-size: var(--type-caption);
+    line-height: 1.65;
+  }
+}

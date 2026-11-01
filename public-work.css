@@ -1,0 +1,65 @@
+/* Uniform photo-and-copy rows make public activities easy to scan. */
+.public-editorial {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+}
+.public-story { min-width: 0; }
+.public-section .section-heading.compact { grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); column-gap: 48px; margin-bottom: 44px; }
+.public-section .section-heading > p:last-child:not(.eyebrow) { max-width: 48ch; font-size: 18px; }
+.public-story { display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); gap: 48px; align-items: start; }
+.public-story + .public-story { border-top: 1px solid var(--line); padding-top: 40px; }
+.public-story .still figcaption { border-bottom: 0; font-size: 13px; }
+.public-section .public-story .still .photo-link { aspect-ratio: 16/10; border-radius: 3px; }
+.public-story .photo-link img { object-position: 50% 35%; }
+.demo-still .photo-link img { object-position: 50% 0; }
+.public-story-copy { min-width: 0; padding-top: 12px; }
+.public-story-copy > .eyebrow { color: var(--accent); }
+.public-story-copy > .eyebrow { font-size: 13px; }
+.public-story-copy h3 {
+  margin-top: 12px;
+  font: 500 clamp(25px, 2.4vw, 31px)/1.35 var(--sans);
+  letter-spacing: -.025em;
+}
+.public-story-copy > p:not(.eyebrow) {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.75;
+  max-width: 52ch;
+}
+.public-section .text-link { margin-top: 20px; gap: 24px; max-width: 100%; font-size: 15px; }
+.public-section .photo-event-link { text-decoration: none; min-height: 44px; }
+.public-story-copy strong { font-weight: 600; color: var(--text); }
+/* Preserve the complete supplied event artwork, including its title and date. */
+.public-story .treehacks-still .photo-link { background: #0d1e26; border: 1px solid var(--line); }
+.public-story .treehacks-still .photo-link img { object-fit: contain; object-position: center; transform: none; }
+
+@media screen and (min-width: 721px) {
+  /* Swap the tracks as well as the content to keep every photo the same size. */
+  .public-story:nth-child(even) { grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); }
+  .public-story:nth-child(even) > .still { grid-column: 2; grid-row: 1; }
+  .public-story:nth-child(even) > .public-story-copy { grid-column: 1; grid-row: 1; }
+}
+
+@media (max-width: 1000px) {
+  .public-story, .public-section .section-heading.compact { column-gap: 32px; }
+  .public-story-copy { padding-top: 0; }
+  .public-story-copy h3 { font-size: 26px; }
+  .public-story-copy > p:not(.eyebrow) { font-size: 17px; }
+}
+@media (max-width: 720px) {
+  .public-section .section-heading.compact { grid-template-columns: minmax(0, 1fr); margin-bottom: 32px; }
+  .public-section .section-heading > p:last-child:not(.eyebrow) { font-size: 17px; }
+  .public-editorial { gap: 32px; }
+  .public-story { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .public-story + .public-story { padding-top: 32px; }
+}
+@media print {
+  .public-editorial { display: block; }
+  .public-story, .public-story + .public-story { padding-top: 0; margin-bottom: 24px; }
+  .public-story { grid-template-columns: 1fr 1fr; gap: 24px; break-inside: avoid; }
+  .public-story-copy { padding-top: 0; }
+  .public-story-copy h3 { font-size: 20pt; }
+  .public-story-copy > p:not(.eyebrow) { font-size: 11pt; }
+}
